@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 0.32.4">
+  <meta name="description" content="myportion_app API docs, for the Dart programming language.">
+  <title>myportion_app - Dart API docs</title>
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body data-base-href=""
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">myportion_app package</li>
+  </ol>
+  <div class="self-name">myportion_app</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li class="self-crumb">myportion_app package</li>
+    </ol>
+    
+    <h5 class="hidden-xs"><span class="package-name">myportion_app</span> <span class="package-kind">package</span></h5>
+    <ol>
+          <li class="section-title">Libraries</li>
+          <li><a href="ui_auth_AuthScreen/ui_auth_AuthScreen-library.html">AuthScreen</a></li>
+          <li><a href="services_Authenticate/services_Authenticate-library.html">Authenticate</a></li>
+          <li><a href="ui_home_HomeScreen/ui_home_HomeScreen-library.html">HomeScreen</a></li>
+          <li><a href="ui_login_LoginScreen/ui_login_LoginScreen-library.html">LoginScreen</a></li>
+          <li><a href="ui_onBoarding_OnBoardingScreen/ui_onBoarding_OnBoardingScreen-library.html">OnBoardingScreen</a></li>
+          <li><a href="ui_signUp_SignUpScreen/ui_signUp_SignUpScreen-library.html">SignUpScreen</a></li>
+          <li><a href="model_User/model_User-library.html">User</a></li>
+          <li><a href="constants/constants-library.html">constants</a></li>
+          <li><a href="services_helper/services_helper-library.html">helper</a></li>
+          <li><a href="main/main-library.html">main</a></li>
+    </ol>
+  </div>
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <section class="desc markdown">
+        <h1 id="myportion_app">myportion_app</h1>
+<p>A new Flutter project.</p>
+<h2 id="working-with-github">Working With GitHub</h2>
+<ol>
+<li><a href="https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/adding-a-new-gpg-key-to-your-github-account"><strong>Signed Commits are Required</strong></a></li>
+<li><strong>No Commits directly to Master</strong></li>
+<li><strong>Two Reviews Required per Pull Request</strong></li>
+<li><strong>Happy Commiting :)</strong></li>
+</ol>
+<h2 id="getting-started">Getting Started</h2>
+<p>This project is a starting point for a Flutter application.</p>
+<p>A few resources to get you started if this is your first Flutter project:</p>
+<ul>
+<li><a href="https://flutter.dev/docs/get-started/codelab">Lab: Write your first Flutter app</a></li>
+<li><a href="https://flutter.dev/docs/cookbook">Cookbook: Useful Flutter samples</a></li>
+</ul>
+<p>For help getting started with Flutter, view our
+<a href="https://flutter.dev/docs">online documentation</a>, which offers tutorials,
+samples, guidance on mobile development, and a full API reference.</p>
+<h3 id="setting-up-the-development-environment">Setting up the Development Environment</h3>
+<p>Setup a VM with Ubuntu 20.04 (Or others if you dare)
+I chose to use <a href="https://ubuntu.com/download/desktop">20.04.1 LTS</a>
+Install vscode
+<code>sudo snap install code --classic</code></p>
+<p>Install flutter:
+<code>sudo snap install flutter --classic</code>
+<code>flutter sdk-path</code></p>
+<p>Install other dependencies
+<code>sudo apt install -Y git openjdk-11-jdk</code></p>
+<p>Configure VSCode Extensions</p>
+<ol>
+<li>Launch vscode: <code>code &amp;</code></li>
+<li>Click Package button</li>
+<li>Search for "Flutter"</li>
+<li>Click "Install"</li>
+<li>Search for "Dart"</li>
+<li>Make sure the dart extension is installed as well (It should be a dependency for Flutter)</li>
+</ol>
+<p>Install Android Studio</p>
+<ul>
+<li>
+<p><code>sudo snap install android-studio --classic</code></p>
+</li>
+<li>
+<p>Open Android Studio from the Activities area in Ubuntu</p>
+</li>
+<li>
+<p>Do not import settings</p>
+</li>
+<li>
+<p>Move the the installer choosing the Standard install</p>
+</li>
+<li>
+<p>Once the installer is done, click <code>Finish</code></p>
+</li>
+<li>
+<p>Android Studio should remain open, if not open it.</p>
+</li>
+<li>
+<p><strong>Click Configure in the bottom right</strong> <code>Configure-&gt;SDK-Manager</code></p>
+</li>
+<li>
+<p>Select the version of android that corresponds to a device that you own (If you want to debug on that device).  I had trouble using the Android 11 (R) version, but had good luck with Android 10 (Q)... YMMV</p>
+</li>
+<li>
+<p><strong>Make sure you have the required SDK Tools</strong></p>
+<ul>
+<li>Leave anything that comes checked</li>
+<li>Check <code>Android SDK Command-line Tools (latest)</code></li>
+</ul>
+</li>
+<li>
+<p>Click OK</p>
+</li>
+<li>
+<p>If prompted, accept the terms and conditions and proceed with installing any needed SDKs</p>
+</li>
+</ul>
+<p>From the main Android Studio startup page, <strong>Click Configure-&gt;Plugins</strong>
+Install the "flutter" plugin.  </p>
+<h3 id="setup-an-android-emulator">Setup an Android Emulator</h3>
+<ul>
+<li>Launch Android Studio-&gt;Configure-&gt;AVD Manager</li>
+<li>Downloaded the neede image for the Pixel (Or whatever device)</li>
+<li>Make sure that your VM has Nested virtualization (VT-X) Enabled or you will need to use a physical device to debug.</li>
+</ul>
+<h3 id="flutter-doctor-setup">Flutter Doctor setup</h3>
+<p>Open a terminal and run <code>flutter doctor</code> and handle any errors that may remain in your installation.</p>
+<p>I had to do the following</p>
+<ul>
+<li><code>flutter config --android-studio-dir=/snap/android-studio/current/android-studio</code></li>
+<li><code>flutter doctor --android-licenses</code> Then accept any licenses needed</li>
+<li>It is okay that Android Studio plugins are not recognized</li>
+</ul>
+<ul>
+<li>Close all IDEs</li>
+<li>Launch vscode</li>
+<li>Open the root directory of our GitHub project</li>
+</ul>
+      </section>
+      
+        <section class="summary">
+            <h2>Libraries</h2>
+          <dl>
+            <dt id="AuthScreen">
+              <span class="name"><a href="ui_auth_AuthScreen/ui_auth_AuthScreen-library.html">AuthScreen</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="Authenticate">
+              <span class="name"><a href="services_Authenticate/services_Authenticate-library.html">Authenticate</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="HomeScreen">
+              <span class="name"><a href="ui_home_HomeScreen/ui_home_HomeScreen-library.html">HomeScreen</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="LoginScreen">
+              <span class="name"><a href="ui_login_LoginScreen/ui_login_LoginScreen-library.html">LoginScreen</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="OnBoardingScreen">
+              <span class="name"><a href="ui_onBoarding_OnBoardingScreen/ui_onBoarding_OnBoardingScreen-library.html">OnBoardingScreen</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="SignUpScreen">
+              <span class="name"><a href="ui_signUp_SignUpScreen/ui_signUp_SignUpScreen-library.html">SignUpScreen</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="User">
+              <span class="name"><a href="model_User/model_User-library.html">User</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="constants">
+              <span class="name"><a href="constants/constants-library.html">constants</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="helper">
+              <span class="name"><a href="services_helper/services_helper-library.html">helper</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+            <dt id="main">
+              <span class="name"><a href="main/main-library.html">main</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+          </dl>
+        </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    myportion_app
+      1.0.0+1
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>
