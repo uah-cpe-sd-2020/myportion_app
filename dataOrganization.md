@@ -1,8 +1,8 @@
 # Firestore Data Organization
 ## Users
 ### Collections
-* [Feeders](##-feeders)
-* [Notifications](##-notifications)
+* [Feeders](##feeders)
+* [Notifications](##notifications)
 ### Document Fields
 ```ts
 {
@@ -19,7 +19,7 @@
 ```
 ## Feeders
 ### Collections
-* [Pets](##-pets)
+* [Pets](##pets)
 ### Document Fields
 ```ts
 {
@@ -39,7 +39,7 @@
 ```
 ## Pets
 ### Collections
-* [Schedule](##-schedule)
+* [Schedule](##schedule)
 ### Document Fields
 ```ts
 {
