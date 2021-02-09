@@ -1,6 +1,8 @@
 # Firestore Data Organization
 ## Data Diagram
 [Interactive Data Diagram](https://app.diagrams.net/#G18DQ6qrUtG-X4go2jzja08kt_WIECgaJY)
+
+![image](https://drive.google.com/uc?export=view&id=1HSPNRK2ZCn1c5Rar7XuPkJL8p5WqAyBd)
 ## Users
 ### Collections
 * [Feeders](#feeders)
