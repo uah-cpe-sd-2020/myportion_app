@@ -1,4 +1,6 @@
 # Firestore Data Organization
+## Data Diagram
+[Interactive Data Diagram](https://app.diagrams.net/#G18DQ6qrUtG-X4go2jzja08kt_WIECgaJY)
 ## Users
 ### Collections
 * [Feeders](#feeders)
@@ -6,15 +8,15 @@
 ### Document Fields
 ```ts
 {
-  active: boolean,
-  appIdentifier: string,
-  email: string,
-  firstName: string,
-  id: string,
-  lastName: string,
-  lastOnlineTimestamp: timestamp,
-  phoneNumber: string,
-  profilePictureURL: string
+  active: boolean, //User's active status
+  appIdentifier: string, //User's application device type
+  email: string, //User's email address
+  firstName: string, //User's first name
+  id: string, //Auto-generated document ID
+  lastName: string, //User's last name
+  lastOnlineTimestamp: timestamp, //Timestamp of the user's last online status
+  phoneNumber: string, //User's phone number
+  profilePictureURL: string //URL to user's profile picture
 } 
 ```
 ## Feeders
@@ -23,18 +25,18 @@
 ### Document Fields
 ```ts
 {
-  id: string,
-  modelNumber: string,
-  name: string
+  id: string, //Auto-generated document ID
+  modelNumber: string, //Feeder device model number
+  name: string //Feeder's user-friendly display name
 }
 ```
 ## Notifications
 ### Document Fields
 ```ts
 {
-  id: string,
-  message: string,
-  time: timestamp
+  id: string, //Auto-generated document ID
+  message: string, //Notification content
+  time: timestamp //Time of notification creation
 }
 ```
 ## Pets
@@ -43,20 +45,20 @@
 ### Document Fields
 ```ts
 {
-  RFID: string,
-  age: number,
-  id: string,
-  name: string,
-  type: string,
-  weight: number
+  RFID: string, //RFID of pet's collar fob
+  dob: timestamp, //Date of birth of pet
+  id: string, //Auto-generated document ID
+  name: string, //Name of pet
+  type: string, //Pet type (cat, dog, etc?)
+  lbs: number //weight of pet
 }
 ```
 ## Schedule
 ### Document Fields
 ```ts
 {
-  id: string,
-  portion: number[5],
-  time: timestamp[5]
+  id: string, //Auto-generated document ID
+  portion: number[5], //Array of portions (Units TBD)
+  time: timestamp[5] //Array of timestamps when food will be dispensed
 }
 ```
