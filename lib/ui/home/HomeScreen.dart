@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/model/User.dart';
 import 'package:myportion_app/services/Authenticate.dart';
+import 'package:myportion_app/ui/addPet/AddPetProfileScreen.dart';
 import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
 import 'package:myportion_app/services/helper.dart';
@@ -60,6 +61,18 @@ class _HomeState extends State<HomeScreen> {
                 await auth.FirebaseAuth.instance.signOut();
                 MyAppState.currentUser = null;
                 pushAndRemoveUntil(context, AuthScreen(), false);
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Add Pet Profile',
+                style: TextStyle(color: Colors.black),
+              ),
+              leading: Transform.rotate(
+                  angle: pi / 1,
+                  child: Icon(Icons.pets, color: Colors.black)),
+              onTap: () async {
+                pushReplacement(context, new AddPetProfileScreen());
               },
             ),
           ],
