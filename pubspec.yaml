@@ -14,7 +14,6 @@ dependencies:
   cloud_firestore: ^0.16.0
   cloud_firestore_mocks: ^0.6.0
   progress_dialog: ^1.2.4
-  flutter_facebook_login: 3.0.0
   http: 0.12.2
   image_picker: ^0.6.7+17
   cached_network_image: ^2.5.0

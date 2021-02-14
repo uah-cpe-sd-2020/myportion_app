@@ -129,6 +129,7 @@ pushAndRemoveUntil(BuildContext context, Widget destination, bool predict) {
 
 Widget displayCircleImage(String picUrl, double size, hasBorder) =>
     CachedNetworkImage(
+        key: Key("cachedImg"),
         imageBuilder: (context, imageProvider) =>
             _getCircularImageProvider(imageProvider, size, false),
         imageUrl: picUrl,
