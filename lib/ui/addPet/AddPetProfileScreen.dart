@@ -9,6 +9,7 @@ import 'package:myportion_app/services/Authenticate.dart';
 import 'package:myportion_app/ui/home/HomeScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myportion_app/services/helper.dart';
+import 'package:intl/intl.dart';  //for date format
 
 import '../../constants.dart' as Constants;
 import '../../constants.dart';
@@ -23,12 +24,21 @@ class AddPetProfileScreen extends StatefulWidget {
 
 class _AddPetProfileState extends State<AddPetProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker();
-  TextEditingController _passwordController = new TextEditingController();
+  TextEditingController timeCtl_1 = new TextEditingController();
+  TextEditingController timeCtl_2 = new TextEditingController();
   GlobalKey<FormState> _key = new GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
   String petName;
   String feederID;
+  String singleTime;
   List scheduleFeeding;
+
+  String formatTimeOfDay(TimeOfDay tod) {
+    final now = new DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
+    final format = DateFormat.jm();  //"6:00 AM"
+    return format.format(dt);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,57 +197,65 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                           borderRadius: BorderRadius.circular(25.0),
                         ))))),
         ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-                padding:
-                const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                child:  DropdownButton<String>(
-                  hint: Text('Select Feeder ID'),
-                  value: feederID,
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  iconSize: 15,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.grey),
-                  underline: Container(
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1.0, style: BorderStyle.solid),
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                      ),
-                    ),
+          constraints: BoxConstraints(minWidth: double.infinity),
+          child: Padding(
+            padding:
+            const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+            child:  DropdownButton<String>(
+              hint: Text('Select Feeder ID'),
+              value: feederID,
+              icon: Icon(Icons.keyboard_arrow_down),
+              iconSize: 15,
+              elevation: 16,
+              style: TextStyle(color: Colors.grey),
+              underline: Container(
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1.0, style: BorderStyle.solid),
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  ),
                 ),
-                onChanged: (String newValue) {
+              ),
+              onChanged: (String newValue) {
                 setState(() {
                   feederID = newValue;
                 });},
-                items: <String>['Feeder 1', 'Feeder 2', 'Feeder 3']
+              items: <String>['Feeder 1', 'Feeder 2', 'Feeder 3']
                   .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
+                return DropdownMenuItem<String>(
                   value: value,
                   child: Text( value,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Color.fromRGBO(54, 38, 83, 1)),
-                ),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(color: Color.fromRGBO(54, 38, 83, 1)),
+                  ),
                 );
               }).toList(),
-               ),
-                ),  ),
+            ),
+          ),  ),
         ConstrainedBox(
             constraints: BoxConstraints(minWidth: double.infinity),
             child: Padding(
                 padding:
                 const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
                 child: TextFormField(
-                    key: Key('ScheduleFeeding'),
+                    controller: timeCtl_1,
+                    key: Key('ScheduleFeeding1'),
                     onTap: () async {
+                      FocusScope.of(context).requestFocus(new FocusNode());
                       final TimeOfDay newTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay(hour: 7, minute: 15),
-                      initialEntryMode: TimePickerEntryMode.input,
+                        context: context,
+                        initialTime: TimeOfDay(hour: 7, minute: 15),
+                        initialEntryMode: TimePickerEntryMode.input,
                       );
-                      scheduleFeeding.add(newTime);
+                      if (newTime != null) setState(
+                              () => { singleTime = newTime.toString(),
+                                timeCtl_1.text = formatTimeOfDay(newTime)
+                          }
+                      );
                     },
-                    //onSaved: ,
+                    onSaved: (value){
+                      scheduleFeeding.insert(0, value);
+                    },
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -245,7 +263,47 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                         contentPadding: new EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
                         fillColor: Colors.white,
-                        hintText: 'Schedule Feeding',
+                        hintText: 'Schedule Feeding 1',
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                                color: Color(Constants.COLOR_PRIMARY),
+                                width: 2.0)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                        ))))),
+        ConstrainedBox(
+            constraints: BoxConstraints(minWidth: double.infinity),
+            child: Padding(
+                padding:
+                const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+                child: TextFormField(
+                    controller: timeCtl_2,
+                    key: Key('ScheduleFeeding2'),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      final TimeOfDay newTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay(hour: 7, minute: 15),
+                        initialEntryMode: TimePickerEntryMode.input,
+                      );
+                      if (newTime != null) setState(
+                              () => { singleTime = newTime.toString(),
+                                timeCtl_2.text = formatTimeOfDay(newTime)
+                          }
+                      );
+                    },
+                    onSaved: (value){
+                      scheduleFeeding.insert(1, value);
+                    },
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                    decoration: InputDecoration(
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        fillColor: Colors.white,
+                        hintText: 'Schedule Feeding 2',
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             borderSide: BorderSide(
@@ -279,7 +337,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
     );
   }
 
-  /*_sendToServer() async {
+/*_sendToServer() async {
     if (_key.currentState.validate()) {
       _key.currentState.save();
       showProgress(context, 'Adding new pet, Please wait...', false);
