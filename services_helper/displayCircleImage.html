@@ -94,6 +94,7 @@
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">Widget displayCircleImage(String picUrl, double size, hasBorder) =&gt;
     CachedNetworkImage(
+        key: Key(&quot;cachedImg&quot;),
         imageBuilder: (context, imageProvider) =&gt;
             _getCircularImageProvider(imageProvider, size, false),
         imageUrl: picUrl,
