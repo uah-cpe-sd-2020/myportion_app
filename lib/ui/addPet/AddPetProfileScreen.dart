@@ -31,13 +31,23 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
   String petName;
   String feederID;
   String singleTime;
-  List scheduleFeeding;
+  List scheduleFeeding = [];
+  List <DynamicScheduling> listDynamic = [];
+  int count = 0;
 
-  String formatTimeOfDay(TimeOfDay tod) {
-    final now = new DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-    final format = DateFormat.jm();  //"6:00 AM"
-    return format.format(dt);
+  addDynamic(){
+    if(listDynamic.length >= 5){
+      return;
+    }
+    listDynamic.add(new DynamicScheduling());
+    setState(() {
+
+    });
+  }
+
+  submitFeeding(){
+    listDynamic.forEach((widget)=>scheduleFeeding.insert(count, widget.timeCtl.text));
+    count = count+1;
   }
 
   @override
@@ -162,6 +172,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                 left: 80,
                 right: 0,
                 child: FloatingActionButton(
+                    heroTag: "photo",
                     backgroundColor: Color(COLOR_ACCENT),
                     child: Icon(Icons.camera_alt),
                     mini: true,
@@ -171,32 +182,6 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
           ),
         ),
         ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-                padding:
-                const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                child: TextFormField(
-                    key: Key('PetName'),
-                    validator: validateName,
-                    onSaved: (String val) {
-                      petName = val;
-                    },
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                    decoration: InputDecoration(
-                        contentPadding: new EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Pet Name',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(Constants.COLOR_PRIMARY),
-                                width: 2.0)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ))))),
-        ConstrainedBox(
           constraints: BoxConstraints(minWidth: double.infinity),
           child: Padding(
             padding:
@@ -205,7 +190,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
               hint: Text('Select Feeder ID'),
               value: feederID,
               icon: Icon(Icons.keyboard_arrow_down),
-              iconSize: 15,
+              iconSize: 20,
               elevation: 16,
               style: TextStyle(color: Colors.grey),
               underline: Container(
@@ -238,32 +223,18 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                 padding:
                 const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
                 child: TextFormField(
-                    controller: timeCtl_1,
-                    key: Key('ScheduleFeeding1'),
-                    onTap: () async {
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                      final TimeOfDay newTime = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay(hour: 7, minute: 15),
-                        initialEntryMode: TimePickerEntryMode.input,
-                      );
-                      if (newTime != null) setState(
-                              () => { singleTime = newTime.toString(),
-                                timeCtl_1.text = formatTimeOfDay(newTime)
-                          }
-                      );
+                    key: Key('PetName'),
+                    validator: validateName,
+                    onSaved: (String val) {
+                      petName = val;
                     },
-                    onSaved: (value){
-                      scheduleFeeding.insert(0, value);
-                    },
-                    keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                     decoration: InputDecoration(
                         contentPadding: new EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
                         fillColor: Colors.white,
-                        hintText: 'Schedule Feeding 1',
+                        hintText: 'Pet Name',
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             borderSide: BorderSide(
@@ -272,46 +243,39 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
                         ))))),
-        ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-                padding:
-                const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                child: TextFormField(
-                    controller: timeCtl_2,
-                    key: Key('ScheduleFeeding2'),
-                    onTap: () async {
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                      final TimeOfDay newTime = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay(hour: 7, minute: 15),
-                        initialEntryMode: TimePickerEntryMode.input,
-                      );
-                      if (newTime != null) setState(
-                              () => { singleTime = newTime.toString(),
-                                timeCtl_2.text = formatTimeOfDay(newTime)
-                          }
-                      );
-                    },
-                    onSaved: (value){
-                      scheduleFeeding.insert(1, value);
-                    },
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                    decoration: InputDecoration(
-                        contentPadding: new EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Schedule Feeding 2',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(Constants.COLOR_PRIMARY),
-                                width: 2.0)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ))))),
+          ConstrainedBox(
+              constraints: BoxConstraints(minWidth: double.infinity),
+              child: Padding(
+                  padding:
+                  const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+                  child: new Container(
+                    child: new Column(
+                      children: [
+                        new Column(
+                          children: <Widget> [
+                            new SizedBox(
+                              height: 150.0,
+                              child: new ListView.builder(
+                                itemCount: listDynamic.length,
+                                itemBuilder: (_, index) => listDynamic[index]
+                              )
+                            ),
+                            new Container(
+                              child: new RaisedButton(
+                                onPressed: submitFeeding,
+                                child: Text('Submit Feeding Time')
+                              )
+                            )
+                          ]
+                        ),
+                        new FloatingActionButton(
+                            heroTag: "addFeedingTime",
+                            onPressed: addDynamic,
+                            child: new Icon(Icons.add)),
+                     ]
+                  )
+                  ),
+              )),
         Padding(
           padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40.0),
           child: ConstrainedBox(
@@ -396,4 +360,59 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
       });
     }
   }*/
+}
+
+// ignore: must_be_immutable
+class DynamicScheduling extends StatelessWidget {
+  TextEditingController timeCtl = new TextEditingController();
+  List dynamicScheduleFeeding = [];
+  String singleTime;
+
+  String formatTimeOfDay(TimeOfDay tod) {
+    final now = new DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
+    final format = DateFormat.jm();  //"6:00 AM"
+    return format.format(dt);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: new TextFormField(
+          controller: timeCtl,
+          key: Key('ScheduleFeeding'),
+          onTap: () async {
+            FocusScope.of(context).requestFocus(new FocusNode());
+            final TimeOfDay newTime = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay(hour: 7, minute: 15),
+              initialEntryMode: TimePickerEntryMode.input,
+            );
+            if (newTime != null) {
+                singleTime = newTime.toString();
+                timeCtl.text = formatTimeOfDay(newTime);
+            }
+            },
+          onSaved: (value){
+            dynamicScheduleFeeding.insert(1, value);
+          },
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+          decoration: InputDecoration(
+              contentPadding: new EdgeInsets.symmetric(
+                  vertical: 8, horizontal: 16),
+              fillColor: Colors.white,
+              hintText: 'Schedule Feeding',
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                      color: Color(Constants.COLOR_PRIMARY),
+                      width: 2.0)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+              )),
+      ),
+    );
+  }
 }
