@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:myportion_app/ui/signUp/SignUpScreen.dart';
+import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
 void main() {
   group('Validate Name', () {
@@ -60,13 +63,13 @@ void main() {
       expect(returnVal, "Password does not contain a symbol, number, a capitol");
     });
     */
-    
+
     test('No Password', () {
       String returnVal = validatePassword("");
       expect(returnVal, "Password must be more than 10 characters");
     });
   });
-  
+
   group('Validate Email', () {
     test('Good Email', () {
       String returnVal = validateEmail("email@gmail.com");
@@ -79,7 +82,7 @@ void main() {
       expect(returnVal, null);
     });
      */
-    
+
     test('No @ character', () {
       String returnVal = validateEmail("abc.example.com");
       expect(returnVal, "Enter Valid Email");
@@ -123,8 +126,125 @@ void main() {
 
   group('Validate Confirm Email', () {
     test('Matching Password', () {
-      String returnVal = validateConfirmPassword("abc123!@#JKL", "abc123!@#JKL");
+      String returnVal =
+          validateConfirmPassword("abc123!@#JKL", "abc123!@#JKL");
       expect(returnVal, null);
+    });
+  });
+
+  group('Progress Dialog Tests', () {
+    testWidgets('Progress Dialog Builds with Correct Text',
+        (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        showProgress(context, 'Message', false);
+        expect(find.text('Message'), findsOneWidget);
+        expect(find.text('Does not Exist'), findsNothing);
+        return Placeholder();
+      });
+    });
+
+    testWidgets('Progress Dialog Exists Only in Context',
+        (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        showProgress(context, 'Message', false);
+        return Placeholder();
+      });
+      expect(find.text('Title'), findsNothing);
+      expect(find.text('Content'), findsNothing);
+    });
+
+    testWidgets('Progress Dialog Update Progress', (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        showProgress(context, 'Message', false);
+        expect(find.text('Message'), findsOneWidget);
+        updateProgress('NewMessage');
+        expect(find.text('Message'), findsNothing);
+        expect(find.text('NewMessage'), findsOneWidget);
+        return Placeholder();
+      });
+    });
+
+    testWidgets('Progress Dialog Hide Progress', (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        showProgress(context, 'Message', false);
+        expect(find.text('Message'), findsOneWidget);
+        hideProgress();
+        expect(find.text('Message'), findsNothing);
+        return Placeholder();
+      });
+    });
+  });
+
+  group('Notification Alert Tests', () {
+    testWidgets('Notification Alert Builds with Correct Text',
+        (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        showAlertDialog(context, 'Title', 'Content');
+        expect(find.text('Title'), findsOneWidget);
+        expect(find.text('Content'), findsOneWidget);
+        expect(find.text('Does not Exist'), findsNothing);
+        return Placeholder();
+      });
+    });
+    testWidgets('Notification Alert Exists Only in Context',
+        (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        showAlertDialog(context, 'Title', 'Content');
+        return Placeholder();
+      });
+      expect(find.text('Title'), findsNothing);
+      expect(find.text('Content'), findsNothing);
+    });
+  });
+
+  group('Push Utilities', () {
+    testWidgets('Push Creates View in Right Context',
+        (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        push(context, new SignUpScreen());
+        expect(find.byType(SignUpScreen), findsOneWidget);
+        return Placeholder();
+      });
+      expect(find.byType(SignUpScreen), findsNothing);
+    });
+
+    testWidgets('PushReplacement Changes View in Right Context',
+        (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        push(context, new SignUpScreen());
+        pushReplacement(context, new AuthScreen());
+        expect(find.byType(SignUpScreen), findsNothing);
+        expect(find.byType(AuthScreen), findsOneWidget);
+        return Placeholder();
+      });
+      expect(find.byType(AuthScreen), findsNothing);
+    });
+
+    testWidgets('PushAndRemoveUntil Changes View in Right Context',
+        (WidgetTester tester) async {
+      Builder(builder: (BuildContext context) {
+        push(context, new SignUpScreen());
+        pushAndRemoveUntil(context, AuthScreen(), false);
+        expect(find.byType(SignUpScreen), findsNothing);
+        expect(find.byType(AuthScreen), findsOneWidget);
+        return Placeholder();
+      });
+      expect(find.byType(AuthScreen), findsNothing);
+    });
+  });
+
+  group('displayCircleImage Tests', () {
+    testWidgets('displayCircleImage has provided image',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+          displayCircleImage('/assets/images/placeholder.jpg', 20, false));
+      expectLater(find.byKey(Key("cachedImg")), findsOneWidget);
+    });
+
+    testWidgets('displayCircleImage has no provided image',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(displayCircleImage('', 20, false));
+      expectLater(find.byKey(Key("cachedImg")), findsOneWidget);
     });
   });
 }
