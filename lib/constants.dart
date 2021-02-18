@@ -8,4 +8,4 @@ const USERS = 'users';
 const FEEDERS = 'Feeders';
 const PETS = 'Pets';
 const SCHEDULES = 'Schedule';
-const NOTIFICATIONS = 'Notifications';
+const ALERTS = 'Alerts';

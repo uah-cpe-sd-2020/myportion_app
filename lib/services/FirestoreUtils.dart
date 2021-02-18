@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/model/User.dart';
 import 'package:myportion_app/model/Feeder.dart';
-import 'package:myportion_app/model/Notification.dart';
+import 'package:myportion_app/model/Alert.dart';
 import 'package:myportion_app/model/Pet.dart';
 import 'package:myportion_app/model/Schedule.dart';
 
@@ -32,7 +32,7 @@ class FireStoreUtils {
     return await firestore
         .collection(USERS)
         .doc(user.userID)
-        .set(user.toJson())
+        .set(user.toJson(), SetOptions(merge: true))
         .then((document) {
       return user;
     });
@@ -68,36 +68,36 @@ class FireStoreUtils {
         .doc(this.userID)
         .collection(FEEDERS)
         .doc(feeder.feederID)
-        .set(feeder.toJson())
+        .set(feeder.toJson(), SetOptions(merge: true))
         .then((document) {
       return feeder;
     });
   }
 
   /*NOTIFICATION*/
-  Future<Notification> getNotification(String nid) async {
-    DocumentSnapshot notificationDocument = await firestore
+  Future<Alert> getNotification(String nid) async {
+    DocumentSnapshot alertDocument = await firestore
         .collection(USERS)
         .doc(this.userID)
-        .collection(NOTIFICATIONS)
+        .collection(ALERTS)
         .doc(nid)
         .get();
-    if (notificationDocument != null && notificationDocument.exists) {
-      return Notification.fromJson(notificationDocument.data());
+    if (alertDocument != null && alertDocument.exists) {
+      return Alert.fromJson(alertDocument.data());
     } else {
       return null;
     }
   }
 
-  Future<Notification> updateNotification(Notification notification) async {
+  Future<Alert> updateNotification(Alert alert) async {
     return await firestore
         .collection(USERS)
         .doc(this.userID)
-        .collection(NOTIFICATIONS)
-        .doc(notification.notifID)
-        .set(notification.toJson())
+        .collection(ALERTS)
+        .doc(alert.alertID)
+        .set(alert.toJson(), SetOptions(merge: true))
         .then((document) {
-      return notification;
+      return alert;
     });
   }
 
@@ -127,7 +127,7 @@ class FireStoreUtils {
         .doc(this.feederID)
         .collection(PETS)
         .doc(pet.petID)
-        .set(pet.toJson())
+        .set(pet.toJson(), SetOptions(merge: true))
         .then((document) {
       return pet;
     });
@@ -162,7 +162,7 @@ class FireStoreUtils {
         .doc(this.petID)
         .collection(SCHEDULES)
         .doc(schedule.schedID)
-        .set(schedule.toJson())
+        .set(schedule.toJson(), SetOptions(merge: true))
         .then((document) {
       return schedule;
     });

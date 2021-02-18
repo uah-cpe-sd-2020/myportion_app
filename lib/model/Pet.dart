@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Pet {
   String rfid = '';
-  Timestamp dob = Timestamp.fromDate(new DateTime.utc(0, 0, 0, 0, 0, 0));
+  Timestamp dob = Timestamp.now();
   String petID;
   String name = '';
   String type = '';
