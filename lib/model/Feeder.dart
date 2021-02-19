@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Feeder {
   String feederID = '';
   String modelNum;

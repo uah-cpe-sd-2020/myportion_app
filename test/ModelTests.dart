@@ -1,11 +1,7 @@
 import 'dart:io';
 
-import 'package:myportion_app/services/FirestoreUtils.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/model/User.dart';
 import 'package:myportion_app/model/Feeder.dart';
 import 'package:myportion_app/model/Alert.dart';
