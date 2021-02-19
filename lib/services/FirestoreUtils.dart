@@ -31,7 +31,7 @@ class FireStoreUtils {
   static Future<User> updateCurrentUser(User user) async {
     return await firestore
         .collection(USERS)
-        .doc(user.userID)
+        .doc(user.id)
         .set(user.toJson(), SetOptions(merge: true))
         .then((document) {
       return user;
@@ -67,7 +67,7 @@ class FireStoreUtils {
         .collection(USERS)
         .doc(this.userID)
         .collection(FEEDERS)
-        .doc(feeder.feederID)
+        .doc(feeder.id)
         .set(feeder.toJson(), SetOptions(merge: true))
         .then((document) {
       return feeder;
@@ -94,7 +94,7 @@ class FireStoreUtils {
         .collection(USERS)
         .doc(this.userID)
         .collection(ALERTS)
-        .doc(alert.alertID)
+        .doc(alert.id)
         .set(alert.toJson(), SetOptions(merge: true))
         .then((document) {
       return alert;
@@ -126,7 +126,7 @@ class FireStoreUtils {
         .collection(FEEDERS)
         .doc(this.feederID)
         .collection(PETS)
-        .doc(pet.petID)
+        .doc(pet.id)
         .set(pet.toJson(), SetOptions(merge: true))
         .then((document) {
       return pet;
@@ -161,7 +161,7 @@ class FireStoreUtils {
         .collection(PETS)
         .doc(this.petID)
         .collection(SCHEDULES)
-        .doc(schedule.schedID)
+        .doc(schedule.id)
         .set(schedule.toJson(), SetOptions(merge: true))
         .then((document) {
       return schedule;

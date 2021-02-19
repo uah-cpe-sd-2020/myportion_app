@@ -3,20 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Pet {
   String rfid = '';
   Timestamp dob = Timestamp.now();
-  String petID;
+  String id;
   String name = '';
   String type = '';
   num lbs = 0;
 
-  Pet({this.rfid, this.dob, this.petID, this.name, this.type, this.lbs});
+  Pet({this.rfid, this.dob, this.id, this.name, this.type, this.lbs});
 
   /* CLASS FUNCTIONS CAN GO HERE */
 
   factory Pet.fromJson(Map<String, dynamic> parsedJson) {
     return new Pet(
-        rfid: parsedJson['RFID'] ?? '',
+        rfid: parsedJson['rfid'] ?? '',
         dob: parsedJson['dob'],
-        petID: parsedJson['id'] ?? parsedJson['petID'] ?? '',
+        id: parsedJson['id'] ?? '',
         name: parsedJson['name'] ?? '',
         type: parsedJson['type'] ?? '',
         lbs: parsedJson['lbs'] ?? 0);
@@ -24,9 +24,9 @@ class Pet {
 
   Map<String, dynamic> toJson() {
     return {
-      'RFID': this.rfid,
+      'rfid': this.rfid,
       'dob': this.dob,
-      'id': this.petID,
+      'id': this.id,
       'name': this.name,
       'type': this.type,
       'lbs': this.lbs,

@@ -1,24 +1,20 @@
 class Feeder {
-  String feederID = '';
+  String id;
   String modelNum;
   String name = '';
 
-  Feeder({this.feederID, this.modelNum, this.name});
+  Feeder({this.id, this.modelNum, this.name});
 
   /* CLASS FUNCTIONS CAN GO HERE */
 
   factory Feeder.fromJson(Map<String, dynamic> parsedJson) {
     return new Feeder(
-        feederID: parsedJson['id'] ?? parsedJson['feederID'] ?? '',
+        id: parsedJson['id'] ?? '',
         modelNum: parsedJson['modelNumber'] ?? '',
         name: parsedJson['name'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': this.feederID,
-      'modelNumber': this.modelNum,
-      'name': this.name
-    };
+    return {'id': this.id, 'modelNumber': this.modelNum, 'name': this.name};
   }
 }

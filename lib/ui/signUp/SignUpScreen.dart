@@ -370,7 +370,7 @@ class _SignUpState extends State<SignUpScreen> {
             email: email,
             firstName: firstName,
             phoneNumber: mobile,
-            userID: result.user.uid,
+            id: result.user.uid,
             active: true,
             lastName: lastName,
             profilePictureURL: profilePicUrl);

@@ -18,7 +18,7 @@ void main() {
           firstName: "John",
           lastName: "Smith",
           phoneNumber: "1231231234",
-          userID: "user",
+          id: "user",
           profilePictureURL: 'pic.png',
           active: false,
           lastOnlineTimestamp:
@@ -27,7 +27,7 @@ void main() {
       expect(user.firstName, "John");
       expect(user.lastName, "Smith");
       expect(user.phoneNumber, "1231231234");
-      expect(user.userID, "user");
+      expect(user.id, "user");
       expect(user.profilePictureURL, "pic.png");
       expect(user.active, false);
       expect(user.lastOnlineTimestamp,
@@ -51,7 +51,7 @@ void main() {
       expect(user.firstName, "John");
       expect(user.lastName, "Smith");
       expect(user.phoneNumber, "1231231234");
-      expect(user.userID, "user");
+      expect(user.id, "user");
       expect(user.profilePictureURL, "pic.png");
       expect(user.active, false);
       expect(user.lastOnlineTimestamp,
@@ -64,7 +64,7 @@ void main() {
           firstName: "John",
           lastName: "Smith",
           phoneNumber: "1231231234",
-          userID: "user",
+          id: "user",
           profilePictureURL: 'pic.png',
           active: false,
           lastOnlineTimestamp:
@@ -91,9 +91,9 @@ void main() {
 
   group('Feeder Class and Services', () {
     test('Feeder Constructs Properly', () {
-      Feeder feeder = new Feeder(
-          feederID: "feeder", modelNum: "Mark1", name: "Feedtron3000");
-      expect(feeder.feederID, "feeder");
+      Feeder feeder =
+          new Feeder(id: "feeder", modelNum: "Mark1", name: "Feedtron3000");
+      expect(feeder.id, "feeder");
       expect(feeder.modelNum, "Mark1");
       expect(feeder.name, "Feedtron3000");
     });
@@ -101,14 +101,14 @@ void main() {
     test('Feeder fromJson', () {
       Feeder feeder = Feeder.fromJson(
           {'id': "feeder", 'modelNumber': "Mark1", 'name': "Feedtron3000"});
-      expect(feeder.feederID, "feeder");
+      expect(feeder.id, "feeder");
       expect(feeder.modelNum, "Mark1");
       expect(feeder.name, "Feedtron3000");
     });
 
     test('Feeder toJson', () {
-      Feeder feeder = new Feeder(
-          feederID: "feeder", modelNum: "Mark1", name: "Feedtron3000");
+      Feeder feeder =
+          new Feeder(id: "feeder", modelNum: "Mark1", name: "Feedtron3000");
       expect(feeder.toJson(),
           {'id': "feeder", 'modelNumber': "Mark1", 'name': "Feedtron3000"});
     });
@@ -119,14 +119,14 @@ void main() {
       Pet pet = new Pet(
           rfid: "ABC123",
           dob: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
-          petID: "pet",
+          id: "pet",
           name: "Spot",
           type: "Dog",
           lbs: 29);
       expect(pet.rfid, "ABC123");
       expect(pet.dob,
           Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)));
-      expect(pet.petID, "pet");
+      expect(pet.id, "pet");
       expect(pet.name, "Spot");
       expect(pet.type, "Dog");
       expect(pet.lbs, 29);
@@ -134,7 +134,7 @@ void main() {
 
     test('Pet fromJson', () {
       Pet pet = Pet.fromJson({
-        'RFID': "ABC123",
+        'rfid': "ABC123",
         'dob': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
         'id': "pet",
         'name': "Spot",
@@ -144,7 +144,7 @@ void main() {
       expect(pet.rfid, "ABC123");
       expect(pet.dob,
           Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)));
-      expect(pet.petID, "pet");
+      expect(pet.id, "pet");
       expect(pet.name, "Spot");
       expect(pet.type, "Dog");
       expect(pet.lbs, 29);
@@ -154,12 +154,12 @@ void main() {
       Pet pet = new Pet(
           rfid: "ABC123",
           dob: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
-          petID: "pet",
+          id: "pet",
           name: "Spot",
           type: "Dog",
           lbs: 29);
       expect(pet.toJson(), {
-        'RFID': "ABC123",
+        'rfid': "ABC123",
         'dob': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
         'id': "pet",
         'name': "Spot",
@@ -171,7 +171,7 @@ void main() {
 
   group('Schedule Class and Services', () {
     test('Schedule Constructs Properly', () {
-      Schedule sched = new Schedule(schedID: "sched", portion: [
+      Schedule sched = new Schedule(id: "sched", portion: [
         1,
         2,
         3,
@@ -184,7 +184,7 @@ void main() {
         Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 07)),
         Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08))
       ]);
-      expect(sched.schedID, "sched");
+      expect(sched.id, "sched");
       expect(sched.portion, [1, 2, 3, 4, 5]);
       expect(sched.time, [
         Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
@@ -207,7 +207,7 @@ void main() {
           Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08))
         ]
       });
-      expect(sched.schedID, "sched");
+      expect(sched.id, "sched");
       expect(sched.portion, [1, 2, 3, 4, 5]);
       expect(sched.time, [
         Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
@@ -219,7 +219,7 @@ void main() {
     });
 
     test('Schedule toJson', () {
-      Schedule sched = new Schedule(schedID: "sched", portion: [
+      Schedule sched = new Schedule(id: "sched", portion: [
         1,
         2,
         3,
@@ -243,10 +243,10 @@ void main() {
   group('Alert Class and Services', () {
     test('Alert Constructs Properly', () {
       Alert alert = new Alert(
-          alertID: "alert",
+          id: "alert",
           message: "Spot's food has been dispensed",
           time: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08)));
-      expect(alert.alertID, "alert");
+      expect(alert.id, "alert");
       expect(alert.message, "Spot's food has been dispensed");
       expect(alert.time,
           Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08)));
@@ -258,7 +258,7 @@ void main() {
         'message': "Spot's food has been dispensed",
         'time': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08)),
       });
-      expect(alert.alertID, "alert");
+      expect(alert.id, "alert");
       expect(alert.message, "Spot's food has been dispensed");
       expect(alert.time,
           Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08)));
@@ -266,7 +266,7 @@ void main() {
 
     test('Alert toJson', () {
       Alert alert = new Alert(
-          alertID: "alert",
+          id: "alert",
           message: "Spot's food has been dispensed",
           time: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08)));
       expect(alert.toJson(), {
