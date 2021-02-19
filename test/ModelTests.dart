@@ -104,7 +104,6 @@ void main() {
       expect(feeder.feederID, "feeder");
       expect(feeder.modelNum, "Mark1");
       expect(feeder.name, "Feedtron3000");
-      ;
     });
 
     test('Feeder toJson', () {
