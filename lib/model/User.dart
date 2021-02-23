@@ -9,7 +9,7 @@ class User {
   String phoneNumber = '';
   bool active = false;
   Timestamp lastOnlineTimestamp = Timestamp.now();
-  String userID;
+  String id;
   String profilePictureURL = '';
   bool selected = false;
   String appIdentifier = 'Flutter ${Platform.operatingSystem}';
@@ -21,7 +21,7 @@ class User {
       this.lastName,
       this.active,
       this.lastOnlineTimestamp,
-      this.userID,
+      this.id,
       this.profilePictureURL});
 
   String fullName() {
@@ -36,7 +36,7 @@ class User {
         active: parsedJson['active'] ?? false,
         lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
         phoneNumber: parsedJson['phoneNumber'] ?? '',
-        userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
+        id: parsedJson['id'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '');
   }
 
@@ -46,7 +46,7 @@ class User {
       'firstName': this.firstName,
       'lastName': this.lastName,
       'phoneNumber': this.phoneNumber,
-      'id': this.userID,
+      'id': this.id,
       'active': this.active,
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
       'profilePictureURL': this.profilePictureURL,

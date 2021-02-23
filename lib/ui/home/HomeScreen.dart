@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/model/User.dart';
-import 'package:myportion_app/services/Authenticate.dart';
+import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
 import 'package:myportion_app/services/helper.dart';
@@ -95,7 +95,7 @@ class _HomeState extends State<HomeScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(user.userID),
+              child: Text(user.id),
             ),
           ],
         ),
