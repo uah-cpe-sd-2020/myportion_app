@@ -12,16 +12,17 @@ import 'package:myportion_app/model/Schedule.dart';
 class FireStoreUtils {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   Reference storage = FirebaseStorage.instance.ref();
-  String userID;
-  String feederID;
-  String petID;
+  static String userID;
+  static String feederID = "temp";
+  static String petID = "temp";
 
   /*USER*/
   Future<User> getCurrentUser(String uid) async {
     DocumentSnapshot userDocument =
         await firestore.collection(USERS).doc(uid).get();
     if (userDocument != null && userDocument.exists) {
-      this.userID = uid;
+      FireStoreUtils.userID = uid;
+      print(uid);
       return User.fromJson(userDocument.data());
     } else {
       return null;
@@ -50,22 +51,36 @@ class FireStoreUtils {
   Future<Feeder> getFeeder(String fid) async {
     DocumentSnapshot feederDocument = await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(FEEDERS)
         .doc(fid)
         .get();
     if (feederDocument != null && feederDocument.exists) {
-      this.feederID = fid;
+      FireStoreUtils.feederID = fid;
       return Feeder.fromJson(feederDocument.data());
     } else {
       return null;
     }
   }
 
+  Future<Feeder> addFeeder(Feeder feeder) async {
+    Feeder temp = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .add(feeder.toJson())
+        .then((document) {
+      feeder.id = document.id;
+      return feeder;
+    });
+    FireStoreUtils.feederID = temp.id;
+    return temp;
+  }
+
   Future<Feeder> updateFeeder(Feeder feeder) async {
     return await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(FEEDERS)
         .doc(feeder.id)
         .set(feeder.toJson(), SetOptions(merge: true))
@@ -78,7 +93,7 @@ class FireStoreUtils {
   Future<Alert> getNotification(String nid) async {
     DocumentSnapshot alertDocument = await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(ALERTS)
         .doc(nid)
         .get();
@@ -92,7 +107,7 @@ class FireStoreUtils {
   Future<Alert> updateNotification(Alert alert) async {
     return await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(ALERTS)
         .doc(alert.id)
         .set(alert.toJson(), SetOptions(merge: true))
@@ -105,26 +120,42 @@ class FireStoreUtils {
   Future<Pet> getPet(String pid) async {
     DocumentSnapshot petDocument = await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(FEEDERS)
-        .doc(this.feederID)
+        .doc(FireStoreUtils.feederID)
         .collection(PETS)
         .doc(pid)
         .get();
     if (petDocument != null && petDocument.exists) {
-      this.petID = pid;
+      FireStoreUtils.petID = pid;
       return Pet.fromJson(petDocument.data());
     } else {
       return null;
     }
   }
 
+  Future<Pet> addPet(Pet pet) async {
+    Pet temp = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .doc(FireStoreUtils.feederID)
+        .collection(PETS)
+        .add(pet.toJson())
+        .then((document) {
+      pet.id = document.id;
+      return pet;
+    });
+    FireStoreUtils.petID = temp.id;
+    return temp;
+  }
+
   Future<Pet> updatePet(Pet pet) async {
     return await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(FEEDERS)
-        .doc(this.feederID)
+        .doc(FireStoreUtils.feederID)
         .collection(PETS)
         .doc(pet.id)
         .set(pet.toJson(), SetOptions(merge: true))
@@ -137,11 +168,11 @@ class FireStoreUtils {
   Future<Schedule> getSchedule(String sid) async {
     DocumentSnapshot scheduleDocument = await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(FEEDERS)
-        .doc(this.feederID)
+        .doc(FireStoreUtils.feederID)
         .collection(PETS)
-        .doc(this.petID)
+        .doc(FireStoreUtils.petID)
         .collection(SCHEDULES)
         .doc(sid)
         .get();
@@ -152,14 +183,29 @@ class FireStoreUtils {
     }
   }
 
+  Future<Schedule> addSchedule(Schedule schedule) async {
+    return await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .doc(FireStoreUtils.feederID)
+        .collection(PETS)
+        .doc(FireStoreUtils.petID)
+        .collection(SCHEDULES)
+        .add(schedule.toJson())
+        .then((document) {
+      return schedule;
+    });
+  }
+
   Future<Schedule> updateSchedule(Schedule schedule) async {
     return await firestore
         .collection(USERS)
-        .doc(this.userID)
+        .doc(FireStoreUtils.userID)
         .collection(FEEDERS)
-        .doc(this.feederID)
+        .doc(FireStoreUtils.feederID)
         .collection(PETS)
-        .doc(this.petID)
+        .doc(FireStoreUtils.petID)
         .collection(SCHEDULES)
         .doc(schedule.id)
         .set(schedule.toJson(), SetOptions(merge: true))

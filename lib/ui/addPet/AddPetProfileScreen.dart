@@ -1,10 +1,12 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myportion_app/model/Feeder.dart';
 import 'package:myportion_app/model/Pet.dart';
+import 'package:myportion_app/model/Schedule.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/ui/home/HomeScreen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -279,7 +281,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
               ),
               textColor: Colors.white,
               splashColor: Color(Constants.COLOR_PRIMARY),
-              //onPressed: _sendToServer
+              onPressed: _sendToServer,
               padding: EdgeInsets.only(top: 12, bottom: 12),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.0),
@@ -292,65 +294,50 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
     );
   }
 
-/*_sendToServer() async {
+  _sendToServer() async {
     if (_key.currentState.validate()) {
       _key.currentState.save();
       showProgress(context, 'Adding new pet, Please wait...', false);
       var profilePicUrl = '';
       try {
+        /*BEGIN*/
+        //Remove once add-a-feeder is established
+        await FireStoreUtils()
+            .addFeeder(new Feeder(modelNum: "Model1", name: "Feeder"));
+        /*END*/
+        Pet pet = Pet(
+            rfid: '',
+            dob: Timestamp.now(),
+            id: '',
+            name: petName,
+            type: 'Dog',
+            lbs: 17,
+            petProfilePictureURL: profilePicUrl);
+        print("Before");
+        pet = await FireStoreUtils().addPet(pet);
+        print("After");
         if (_image != null) {
           updateProgress('Uploading image, Please wait...');
           profilePicUrl = await FireStoreUtils()
-              .uploadUserImageToFireStorage(_image, pet.uid);
+              .uploadUserImageToFireStorage(_image, pet.id);
         }
-        Pet pet = Pet(
-            petName: petName,
-            feederID: feederID,
-            scheduleFeeding: scheduleFeeding,
-            active: true,
-            petProfilePictureURL: profilePicUrl);
-        await FireStoreUtils.firestore
-            .collection(Constants.USERS)
-            .doc(result.user.uid)
-            .set(user.toJson());
-        await FireStoreUtils.firestore.collection(Constants.PETS).
-        hideProgress();
-        MyAppState.currentUser = user;
-        pushAndRemoveUntil(context, HomeScreen(user: user), false);
-      } on auth.FirebaseAuthException catch (error) {
-        hideProgress();
-        String message = 'Couldn\'t sign up';
-        switch (error.code) {
-          case 'email-already-in-use':
-            message = 'Email address already in use';
-            break;
-          case 'invalid-email':
-            message = 'validEmail';
-            break;
-          case 'operation-not-allowed':
-            message = 'Email/password accounts are not enabled';
-            break;
-          case 'weak-password':
-            message = 'password is too weak.';
-            break;
-          case 'too-many-requests':
-            message = 'Too many requests, '
-                'Please try again later.';
-            break;
-        }
-        showAlertDialog(context, 'Failed', message);
-        print(error.toString());
+        Schedule sched = Schedule(
+          time: scheduleFeeding,
+        );
+        await FireStoreUtils().addSchedule(sched);
+        pushAndRemoveUntil(
+            context, HomeScreen(user: MyAppState.currentUser), false);
       } catch (e) {
-        print('_SignUpState._sendToServer $e');
+        print('_addpet._sendToServer $e');
         hideProgress();
-        showAlertDialog(context, 'Failed', 'Couldn\'t sign up');
+        showAlertDialog(context, 'Failed', 'Couldn\'t add pet');
       }
     } else {
       setState(() {
         _validate = AutovalidateMode.onUserInteraction;
       });
     }
-  }*/
+  }
 }
 
 // ignore: must_be_immutable
@@ -385,7 +372,7 @@ class DynamicScheduling extends StatelessWidget {
           }
         },
         onSaved: (value) {
-          dynamicScheduleFeeding.insert(1, value);
+          dynamicScheduleFeeding.add(value);
         },
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
