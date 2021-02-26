@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Format the code
+flutter format lib
+
 # Get depends
 flutter pub get
 

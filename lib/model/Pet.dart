@@ -9,7 +9,14 @@ class Pet {
   num lbs = 0;
   String petProfilePictureURL = '';
 
-  Pet({this.rfid, this.dob, this.id, this.name, this.type, this.lbs, this.petProfilePictureURL});
+  Pet(
+      {this.rfid,
+      this.dob,
+      this.id,
+      this.name,
+      this.type,
+      this.lbs,
+      this.petProfilePictureURL});
 
   /* CLASS FUNCTIONS CAN GO HERE */
 
