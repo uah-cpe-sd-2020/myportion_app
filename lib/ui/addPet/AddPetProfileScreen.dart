@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myportion_app/model/Pet.dart';
-import 'package:myportion_app/services/Authenticate.dart';
+import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/ui/home/HomeScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myportion_app/services/helper.dart';
-import 'package:intl/intl.dart';  //for date format
+import 'package:intl/intl.dart'; //for date format
 
 import '../../constants.dart' as Constants;
 import '../../constants.dart';
@@ -32,22 +32,21 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
   String feederID;
   String singleTime;
   List scheduleFeeding = [];
-  List <DynamicScheduling> listDynamic = [];
+  List<DynamicScheduling> listDynamic = [];
   int count = 0;
 
-  addDynamic(){
-    if(listDynamic.length >= 5){
+  addDynamic() {
+    if (listDynamic.length >= 5) {
       return;
     }
     listDynamic.add(new DynamicScheduling());
-    setState(() {
-
-    });
+    setState(() {});
   }
 
-  submitFeeding(){
-    listDynamic.forEach((widget)=>scheduleFeeding.insert(count, widget.timeCtl.text));
-    count = count+1;
+  submitFeeding() {
+    listDynamic.forEach(
+        (widget) => scheduleFeeding.insert(count, widget.timeCtl.text));
+    count = count + 1;
   }
 
   @override
@@ -100,7 +99,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
           onPressed: () async {
             Navigator.pop(context);
             PickedFile image =
-            await _imagePicker.getImage(source: ImageSource.gallery);
+                await _imagePicker.getImage(source: ImageSource.gallery);
             if (image != null)
               setState(() {
                 _image = File(image.path);
@@ -113,7 +112,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
           onPressed: () async {
             Navigator.pop(context);
             PickedFile image =
-            await _imagePicker.getImage(source: ImageSource.camera);
+                await _imagePicker.getImage(source: ImageSource.camera);
             if (image != null)
               setState(() {
                 _image = File(image.path);
@@ -145,7 +144,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
             )),
         Padding(
           padding:
-          const EdgeInsets.only(left: 8.0, top: 32, right: 8, bottom: 8),
+              const EdgeInsets.only(left: 8.0, top: 32, right: 8, bottom: 8),
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: <Widget>[
@@ -158,13 +157,13 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                     height: 170,
                     child: _image == null
                         ? Image.asset(
-                      'assets/images/placeholder.jpg',
-                      fit: BoxFit.cover,
-                    )
+                            'assets/images/placeholder.jpg',
+                            fit: BoxFit.cover,
+                          )
                         : Image.file(
-                      _image,
-                      fit: BoxFit.cover,
-                    ),
+                            _image,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
               ),
@@ -184,9 +183,8 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
         ConstrainedBox(
           constraints: BoxConstraints(minWidth: double.infinity),
           child: Padding(
-            padding:
-            const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-            child:  DropdownButton<String>(
+            padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+            child: DropdownButton<String>(
               hint: Text('Select Feeder ID'),
               value: feederID,
               icon: Icon(Icons.keyboard_arrow_down),
@@ -204,24 +202,27 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
               onChanged: (String newValue) {
                 setState(() {
                   feederID = newValue;
-                });},
+                });
+              },
               items: <String>['Feeder 1', 'Feeder 2', 'Feeder 3']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text( value,
+                  child: Text(
+                    value,
                     textAlign: TextAlign.left,
                     style: TextStyle(color: Color.fromRGBO(54, 38, 83, 1)),
                   ),
                 );
               }).toList(),
             ),
-          ),  ),
+          ),
+        ),
         ConstrainedBox(
             constraints: BoxConstraints(minWidth: double.infinity),
             child: Padding(
                 padding:
-                const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+                    const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
                 child: TextFormField(
                     key: Key('PetName'),
                     validator: validateName,
@@ -243,39 +244,29 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
                         ))))),
-          ConstrainedBox(
-              constraints: BoxConstraints(minWidth: double.infinity),
-              child: Padding(
-                  padding:
-                  const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                  child: new Container(
-                    child: new Column(
-                      children: [
-                        new Column(
-                          children: <Widget> [
-                            new SizedBox(
-                              height: 150.0,
-                              child: new ListView.builder(
-                                itemCount: listDynamic.length,
-                                itemBuilder: (_, index) => listDynamic[index]
-                              )
-                            ),
-                            new Container(
-                              child: new RaisedButton(
-                                onPressed: submitFeeding,
-                                child: Text('Submit Feeding Time')
-                              )
-                            )
-                          ]
-                        ),
-                        new FloatingActionButton(
-                            heroTag: "addFeedingTime",
-                            onPressed: addDynamic,
-                            child: new Icon(Icons.add)),
-                     ]
-                  )
-                  ),
-              )),
+        ConstrainedBox(
+            constraints: BoxConstraints(minWidth: double.infinity),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+              child: new Container(
+                  child: new Column(children: [
+                new Column(children: <Widget>[
+                  new SizedBox(
+                      height: 150.0,
+                      child: new ListView.builder(
+                          itemCount: listDynamic.length,
+                          itemBuilder: (_, index) => listDynamic[index])),
+                  new Container(
+                      child: new RaisedButton(
+                          onPressed: submitFeeding,
+                          child: Text('Submit Feeding Time')))
+                ]),
+                new FloatingActionButton(
+                    heroTag: "addFeedingTime",
+                    onPressed: addDynamic,
+                    child: new Icon(Icons.add)),
+              ])),
+            )),
         Padding(
           padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40.0),
           child: ConstrainedBox(
@@ -371,7 +362,7 @@ class DynamicScheduling extends StatelessWidget {
   String formatTimeOfDay(TimeOfDay tod) {
     final now = new DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-    final format = DateFormat.jm();  //"6:00 AM"
+    final format = DateFormat.jm(); //"6:00 AM"
     return format.format(dt);
   }
 
@@ -379,39 +370,38 @@ class DynamicScheduling extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: new TextFormField(
-          controller: timeCtl,
-          key: Key('ScheduleFeeding'),
-          onTap: () async {
-            FocusScope.of(context).requestFocus(new FocusNode());
-            final TimeOfDay newTime = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay(hour: 7, minute: 15),
-              initialEntryMode: TimePickerEntryMode.input,
-            );
-            if (newTime != null) {
-                singleTime = newTime.toString();
-                timeCtl.text = formatTimeOfDay(newTime);
-            }
-            },
-          onSaved: (value){
-            dynamicScheduleFeeding.insert(1, value);
-          },
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.next,
-          onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-          decoration: InputDecoration(
-              contentPadding: new EdgeInsets.symmetric(
-                  vertical: 8, horizontal: 16),
-              fillColor: Colors.white,
-              hintText: 'Schedule Feeding',
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide(
-                      color: Color(Constants.COLOR_PRIMARY),
-                      width: 2.0)),
-              border: OutlineInputBorder(
+        controller: timeCtl,
+        key: Key('ScheduleFeeding'),
+        onTap: () async {
+          FocusScope.of(context).requestFocus(new FocusNode());
+          final TimeOfDay newTime = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay(hour: 7, minute: 15),
+            initialEntryMode: TimePickerEntryMode.input,
+          );
+          if (newTime != null) {
+            singleTime = newTime.toString();
+            timeCtl.text = formatTimeOfDay(newTime);
+          }
+        },
+        onSaved: (value) {
+          dynamicScheduleFeeding.insert(1, value);
+        },
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+        decoration: InputDecoration(
+            contentPadding:
+                new EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            fillColor: Colors.white,
+            hintText: 'Schedule Feeding',
+            focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-              )),
+                borderSide: BorderSide(
+                    color: Color(Constants.COLOR_PRIMARY), width: 2.0)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.0),
+            )),
       ),
     );
   }

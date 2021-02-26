@@ -157,7 +157,8 @@ void main() {
           id: "pet",
           name: "Spot",
           type: "Dog",
-          lbs: 29);
+          lbs: 29,
+          petProfilePictureURL: null);
       expect(pet.toJson(), {
         'rfid': "ABC123",
         'dob': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
@@ -165,6 +166,7 @@ void main() {
         'name': "Spot",
         'type': "Dog",
         'lbs': 29,
+        'petProfilePictureURL': null
       });
     });
   });
