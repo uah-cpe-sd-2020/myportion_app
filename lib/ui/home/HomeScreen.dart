@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/model/User.dart';
-import 'package:myportion_app/services/Authenticate.dart';
 import 'package:myportion_app/ui/addPet/AddPetProfileScreen.dart';
+import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
 import 'package:myportion_app/services/helper.dart';
@@ -69,8 +69,7 @@ class _HomeState extends State<HomeScreen> {
                 style: TextStyle(color: Colors.black),
               ),
               leading: Transform.rotate(
-                  angle: pi / 1,
-                  child: Icon(Icons.pets, color: Colors.black)),
+                  angle: pi / 1, child: Icon(Icons.pets, color: Colors.black)),
               onTap: () async {
                 pushReplacement(context, new AddPetProfileScreen());
               },
@@ -108,7 +107,7 @@ class _HomeState extends State<HomeScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(user.userID),
+              child: Text(user.id),
             ),
           ],
         ),

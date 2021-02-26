@@ -1,44 +1,38 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Pet {
-  String petName = '';
-  String feederID = '';
-  List scheduleFeeding = [];
-  String petID;
-  bool active = false;
+  String rfid = '';
+  Timestamp dob = Timestamp.now();
+  String id;
+  String name = '';
+  String type = '';
+  num lbs = 0;
   String petProfilePictureURL = '';
-  bool selected = false;
-  String appIdentifier = 'Flutter ${Platform.operatingSystem}';
 
-  Pet (
-      {this.petName,
-        this.feederID,
-        this.scheduleFeeding,
-        this.petID,
-        this.active,
-        this.petProfilePictureURL});
+  Pet({this.rfid, this.dob, this.id, this.name, this.type, this.lbs, this.petProfilePictureURL});
+
+  /* CLASS FUNCTIONS CAN GO HERE */
 
   factory Pet.fromJson(Map<String, dynamic> parsedJson) {
     return new Pet(
-        petName: parsedJson['petName'] ?? '',
-        feederID: parsedJson['feederID'] ?? '',
-        active: parsedJson['active'] ?? false,
-        scheduleFeeding: parsedJson['scheduleFeeding'] ?? '',
-        petID: parsedJson['id'] ?? parsedJson['petID'] ?? '',
+        rfid: parsedJson['rfid'] ?? '',
+        dob: parsedJson['dob'],
+        id: parsedJson['id'] ?? '',
+        name: parsedJson['name'] ?? '',
+        type: parsedJson['type'] ?? '',
+        lbs: parsedJson['lbs'] ?? 0,
         petProfilePictureURL: parsedJson['petProfilePictureURL'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'petName': this.petName,
-      'feederID': this.feederID,
-      'scheduleFeeding': this.scheduleFeeding,
-      'id': this.petID,
-      'active': this.active,
+      'rfid': this.rfid,
+      'dob': this.dob,
+      'id': this.id,
+      'name': this.name,
+      'type': this.type,
+      'lbs': this.lbs,
       'petProfilePictureURL': this.petProfilePictureURL,
-      'appIdentifier': this.appIdentifier
     };
   }
 }

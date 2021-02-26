@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myportion_app/model/User.dart';
-import 'package:myportion_app/services/Authenticate.dart';
+import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/ui/home/HomeScreen.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
