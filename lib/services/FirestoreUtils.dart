@@ -13,8 +13,8 @@ class FireStoreUtils {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   Reference storage = FirebaseStorage.instance.ref();
   static String userID;
-  static String feederID = "temp";
-  static String petID = "temp";
+  static String feederID;
+  static String petID;
 
   /*USER*/
   Future<User> getCurrentUser(String uid) async {
@@ -30,6 +30,7 @@ class FireStoreUtils {
   }
 
   static Future<User> updateCurrentUser(User user) async {
+    FireStoreUtils.userID = user.id;
     return await firestore
         .collection(USERS)
         .doc(user.id)

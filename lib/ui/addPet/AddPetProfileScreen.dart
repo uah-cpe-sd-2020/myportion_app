@@ -12,10 +12,8 @@ import 'package:myportion_app/ui/home/HomeScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:intl/intl.dart'; //for date format
-
-import '../../constants.dart' as Constants;
-import '../../constants.dart';
-import '../../main.dart';
+import 'package:myportion_app/constants.dart';
+import 'package:myportion_app/main.dart';
 
 File _image;
 
@@ -140,7 +138,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
             child: Text(
               'Create new pet profile',
               style: TextStyle(
-                  color: Color(Constants.COLOR_PRIMARY),
+                  color: Color(COLOR_PRIMARY),
                   fontWeight: FontWeight.bold,
                   fontSize: 25.0),
             )),
@@ -241,8 +239,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             borderSide: BorderSide(
-                                color: Color(Constants.COLOR_PRIMARY),
-                                width: 2.0)),
+                                color: Color(COLOR_PRIMARY), width: 2.0)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
                         ))))),
@@ -274,18 +271,18 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(minWidth: double.infinity),
             child: RaisedButton(
-              color: Color(Constants.COLOR_PRIMARY),
+              color: Color(COLOR_PRIMARY),
               child: Text(
                 'Add Pet',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               textColor: Colors.white,
-              splashColor: Color(Constants.COLOR_PRIMARY),
+              splashColor: Color(COLOR_PRIMARY),
               onPressed: _sendToServer,
               padding: EdgeInsets.only(top: 12, bottom: 12),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.0),
-                  side: BorderSide(color: Color(Constants.COLOR_PRIMARY))),
+                  side: BorderSide(color: Color(COLOR_PRIMARY))),
               key: Key('AddPetButton'),
             ),
           ),
@@ -313,9 +310,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
             type: 'Dog',
             lbs: 17,
             petProfilePictureURL: profilePicUrl);
-        print("Before");
         pet = await FireStoreUtils().addPet(pet);
-        print("After");
         if (_image != null) {
           updateProgress('Uploading image, Please wait...');
           profilePicUrl = await FireStoreUtils()
@@ -384,8 +379,8 @@ class DynamicScheduling extends StatelessWidget {
             hintText: 'Schedule Feeding',
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                    color: Color(Constants.COLOR_PRIMARY), width: 2.0)),
+                borderSide:
+                    BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25.0),
             )),
