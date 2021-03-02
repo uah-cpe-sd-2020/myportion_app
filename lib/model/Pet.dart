@@ -7,8 +7,16 @@ class Pet {
   String name = '';
   String type = '';
   num lbs = 0;
+  String petProfilePictureURL = '';
 
-  Pet({this.rfid, this.dob, this.id, this.name, this.type, this.lbs});
+  Pet(
+      {this.rfid,
+      this.dob,
+      this.id,
+      this.name,
+      this.type,
+      this.lbs,
+      this.petProfilePictureURL});
 
   /* CLASS FUNCTIONS CAN GO HERE */
 
@@ -19,7 +27,8 @@ class Pet {
         id: parsedJson['id'] ?? '',
         name: parsedJson['name'] ?? '',
         type: parsedJson['type'] ?? '',
-        lbs: parsedJson['lbs'] ?? 0);
+        lbs: parsedJson['lbs'] ?? 0,
+        petProfilePictureURL: parsedJson['petProfilePictureURL'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -30,6 +39,7 @@ class Pet {
       'name': this.name,
       'type': this.type,
       'lbs': this.lbs,
+      'petProfilePictureURL': this.petProfilePictureURL,
     };
   }
 }

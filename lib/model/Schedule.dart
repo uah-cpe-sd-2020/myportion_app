@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Schedule {
   String id;
   List<int> portion = [];
-  List<Timestamp> time = [];
+  List<dynamic> time = [];
 
   Schedule({this.id, this.portion, this.time});
 
