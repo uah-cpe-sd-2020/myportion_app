@@ -108,7 +108,6 @@
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool finishedOnBoarding =
       (prefs.getBool(Constants.FINISHED_ON_BOARDING) ?? false);
-
   if (finishedOnBoarding) {
     auth.User firebaseUser = auth.FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {

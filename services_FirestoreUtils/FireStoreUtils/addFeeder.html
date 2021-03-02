@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the storage property from the FireStoreUtils class, for the Dart programming language.">
-  <title>storage property - FireStoreUtils class - FirestoreUtils library - Dart API</title>
+  <meta name="description" content="API docs for the addFeeder method from the FireStoreUtils class, for the Dart programming language.">
+  <title>addFeeder method - FireStoreUtils class - FirestoreUtils library - Dart API</title>
 
   
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
@@ -27,9 +27,9 @@
     <li><a href="../../index.html">myportion_app</a></li>
     <li><a href="../../services_FirestoreUtils/services_FirestoreUtils-library.html">FirestoreUtils</a></li>
     <li><a href="../../services_FirestoreUtils/FireStoreUtils-class.html">FireStoreUtils</a></li>
-    <li class="self-crumb">storage property</li>
+    <li class="self-crumb">addFeeder method</li>
   </ol>
-  <div class="self-name">storage</div>
+  <div class="self-name">addFeeder</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -48,7 +48,7 @@
       <li><a href="../../index.html">myportion_app</a></li>
       <li><a href="../../services_FirestoreUtils/services_FirestoreUtils-library.html">FirestoreUtils</a></li>
       <li><a href="../../services_FirestoreUtils/FireStoreUtils-class.html">FireStoreUtils</a></li>
-      <li class="self-crumb">storage property</li>
+      <li class="self-crumb">addFeeder method</li>
     </ol>
     
     <h5>FireStoreUtils class</h5>
@@ -99,19 +99,32 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-property">storage</span> property </h1></div>
+      <div><h1><span class="kind-method">addFeeder</span> method </h1></div>
 
-        <section class="multi-line-signature">
-          <span class="returntype"><a href="https://pub.dev/documentation/firebase_storage/7.0.0/firebase_storage/Reference-class.html">Reference</a></span>
-          <span class="name ">storage</span>
-          <div class="features">read / write</div>
-        </section>
-                <section class="summary source-code" id="source">
-          <h2><span>Implementation</span></h2>
-          <pre class="language-dart"><code class="language-dart">Reference storage = FirebaseStorage.instance.ref()
-
-</code></pre>
-        </section>
+    <section class="multi-line-signature">
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../model_Feeder/Feeder-class.html">Feeder</a></span>&gt;</span></span>
+            <span class="name ">addFeeder</span>
+(<wbr><ol class="parameter-list"><li><span class="parameter" id="addFeeder-param-feeder"><span class="type-annotation"><a href="../../model_Feeder/Feeder-class.html">Feeder</a></span> <span class="parameter-name">feeder</span></span></li>
+</ol>)
+      
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">Future&lt;Feeder&gt; addFeeder(Feeder feeder) async {
+  Feeder temp = await firestore
+      .collection(USERS)
+      .doc(FireStoreUtils.userID)
+      .collection(FEEDERS)
+      .add(feeder.toJson())
+      .then((document) {
+    feeder.id = document.id;
+    return feeder;
+  });
+  FireStoreUtils.feederID = temp.id;
+  return temp;
+}</code></pre>
+    </section>
 
   </div> <!-- /.main-content -->
 
