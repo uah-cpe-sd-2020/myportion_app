@@ -12,7 +12,7 @@ import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
 import 'package:myportion_app/services/helper.dart';
 
-import '../../main.dart';
+import 'package:myportion_app/main.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
