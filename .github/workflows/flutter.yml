@@ -15,12 +15,12 @@ jobs:
     # available. See https://hub.docker.com/r/cirrusci/flutter for the available
     # images.
     container:
-      image:  cirrusci/flutter:latest
+      image:  cirrusci/flutter:1.22.6
 
     steps:
       
       - name: Print Flutter version
-        run: which flutter
+        run: flutter --version
         
       - name: Checkout Repo
         uses: actions/checkout@v2
