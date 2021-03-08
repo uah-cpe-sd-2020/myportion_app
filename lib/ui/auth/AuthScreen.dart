@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:myportion_app/constants.dart';
+import 'package:myportion_app/ui/login/LoginScreen.dart';
+import 'package:myportion_app/ui/signUp/SignUpScreen.dart';
 import 'package:myportion_app/services/helper.dart';
-
-import '../../constants.dart' as Constants;
-import '../login/LoginScreen.dart';
-import '../signUp/SignUpScreen.dart';
 
 class AuthScreen extends StatelessWidget {
   @override
@@ -20,7 +18,7 @@ class AuthScreen extends StatelessWidget {
                 child: Icon(
                   Icons.phone_iphone,
                   size: 150,
-                  color: Color(Constants.COLOR_PRIMARY),
+                  color: Color(COLOR_PRIMARY),
                 ),
               ),
             ),
@@ -28,7 +26,7 @@ class AuthScreen extends StatelessWidget {
               'Say Hello To MyPortion Control!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Color(Constants.COLOR_PRIMARY),
+                  color: Color(COLOR_PRIMARY),
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold),
             ),
@@ -45,20 +43,20 @@ class AuthScreen extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minWidth: double.infinity),
                 child: RaisedButton(
-                  color: Color(Constants.COLOR_PRIMARY),
+                  color: Color(COLOR_PRIMARY),
                   child: Text(
                     'Log In',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   textColor: Colors.white,
-                  splashColor: Color(Constants.COLOR_PRIMARY),
+                  splashColor: Color(COLOR_PRIMARY),
                   onPressed: () {
                     push(context, new LoginScreen());
                   },
                   padding: EdgeInsets.only(top: 12, bottom: 12),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25.0),
-                      side: BorderSide(color: Color(Constants.COLOR_PRIMARY))),
+                      side: BorderSide(color: Color(COLOR_PRIMARY))),
                   key: Key('NavToLoginButton'),
                 ),
               ),

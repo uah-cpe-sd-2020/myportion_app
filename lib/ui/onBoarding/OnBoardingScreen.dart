@@ -3,9 +3,8 @@ import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:myportion_app/services/helper.dart';
-
-import '../../constants.dart' as Constants;
-import '../auth/AuthScreen.dart';
+import 'package:myportion_app/constants.dart';
+import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
 final _currentPageNotifier = ValueNotifier<int>(0);
 
@@ -50,7 +49,7 @@ Widget _buildCircleIndicator() {
 Widget getPage(IconData icon, String title, String subTitle) {
   return Center(
     child: Container(
-      color: Color(Constants.COLOR_PRIMARY),
+      color: Color(COLOR_PRIMARY),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 100.0),
@@ -90,7 +89,7 @@ Widget getPage(IconData icon, String title, String subTitle) {
 Widget getLastPage(BuildContext context) {
   return Center(
     child: Container(
-      color: Color(Constants.COLOR_PRIMARY),
+      color: Color(COLOR_PRIMARY),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 40.0),
@@ -141,7 +140,7 @@ Widget getLastPage(BuildContext context) {
 
 Future<bool> setFinishedOnBoarding() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.setBool(Constants.FINISHED_ON_BOARDING, true);
+  return prefs.setBool(FINISHED_ON_BOARDING, true);
 }
 
 class OnBoardingScreen extends StatelessWidget {
