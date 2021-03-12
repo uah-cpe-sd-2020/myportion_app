@@ -1,31 +1,55 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:myportion_app/constants.dart';
+import 'package:myportion_app/model/Feeder.dart';
+import 'package:myportion_app/ui/FeederList/FeederListScreen.dart';
+import 'package:myportion_app/ui/home/HomeScreen.dart';
+
+import 'package:myportion_app/main.dart';
 
 class AddFeederScreen extends StatefulWidget {
+  final Feeder feeder;
+
+  AddFeederScreen({@required this.feeder});
   @override
-  State createState() => _AddFeederScreenState();
+  State createState() =>
+      _AddFeederScreenState(feeder, feeder.name, feeder.serialNum);
 }
 
 class _AddFeederScreenState extends State<AddFeederScreen> {
   GlobalKey<FormState> _key = new GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
+  Feeder feeder;
   String feederName;
-  String modelNumber;
+  String serialNumber;
+
+  _AddFeederScreenState(this.feeder, this.feederName, this.serialNumber);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(COLOR_PRIMARY),
+        title: Text('Update Feeder'),
+        leading: IconButton(
+          icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () async {
+            Feeder temp = await FireStoreUtils().getFeeder(feeder.id);
+            if (temp.id == '') {
+              await FireStoreUtils().removeFeeder(feeder);
+            }
+            pushReplacement(context, FeederListScreen());
+          },
+        ),
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
         child: new Container(
-          margin: new EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
+          margin: new EdgeInsets.only(left: 2.0, right: 2, bottom: 2),
           child: new Form(
             key: _key,
             autovalidateMode: _validate,
@@ -39,35 +63,31 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
   Widget formUI() {
     return new Column(
       children: <Widget>[
-        new Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              'Update Feeder',
-              style: TextStyle(
-                  color: Color(COLOR_PRIMARY),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25.0),
-            )),
         Padding(
-          padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40.0),
-          child:  ConstrainedBox(
+          padding: const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
+          child: ConstrainedBox(
               constraints: BoxConstraints(minWidth: double.infinity),
               child: Padding(
                   padding:
-                  const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+                      const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
                   child: TextFormField(
                       key: Key('FeederName'),
                       validator: validateName,
                       onSaved: (String val) {
                         feederName = val;
                       },
+                      initialValue: feederName,
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).nextFocus(),
                       decoration: InputDecoration(
+                          labelText: 'Feeder Name',
+                          labelStyle: TextStyle(
+                            fontSize: 18,
+                          ),
                           contentPadding: new EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16),
+                              vertical: 12, horizontal: 16),
                           fillColor: Colors.white,
-                          hintText: 'Feeder Name',
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               borderSide: BorderSide(
@@ -77,25 +97,30 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
                           ))))),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40.0),
-          child:  ConstrainedBox(
+          padding: const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
+          child: ConstrainedBox(
               constraints: BoxConstraints(minWidth: double.infinity),
               child: Padding(
                   padding:
-                  const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+                      const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
                   child: TextFormField(
-                      key: Key('ModelNumber'),
+                      key: Key('SerialNumber'),
                       validator: validateSerialNumber,
                       onSaved: (String val) {
-                        modelNumber = val;
+                        serialNumber = val;
                       },
+                      initialValue: serialNumber,
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).nextFocus(),
                       decoration: InputDecoration(
+                          labelText: 'Serial Number',
+                          labelStyle: TextStyle(
+                            fontSize: 18,
+                          ),
                           contentPadding: new EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16),
+                              vertical: 12, horizontal: 16),
                           fillColor: Colors.white,
-                          hintText: 'Model Number',
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               borderSide: BorderSide(
@@ -105,7 +130,7 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
                           ))))),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40.0),
+          padding: const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minWidth: double.infinity),
             child: RaisedButton(
@@ -116,7 +141,7 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
               ),
               textColor: Colors.white,
               splashColor: Color(COLOR_PRIMARY),
-              //onPressed: _sendToServer,
+              onPressed: _sendToServer,
               padding: EdgeInsets.only(top: 12, bottom: 12),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.0),
@@ -129,24 +154,17 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
     );
   }
 
- /* _sendToServer() async {
+  _sendToServer() async {
     if (_key.currentState.validate()) {
       _key.currentState.save();
       showProgress(context, 'Updating feeder, Please wait...', false);
       try {
-        Feeder feeder = Feeder(
-            id: '',
-            name: feederName,
-            modelNum: modelNumber);
+        feeder.name = feederName;
+        feeder.modelType = "Prototype";
+        feeder.serialNum = serialNumber;
+        await FireStoreUtils().updateFeeder(feeder);
 
-        /*if feeder doesn't exist currently*/
-        feeder = await FireStoreUtils().addFeeder(feeder);
-
-        /*if feeder already exists */
-        feeder = await FireStoreUtils().updateFeeder(feeder);
-
-        pushAndRemoveUntil(
-            context, HomeScreen(user: MyAppState.currentUser), false);
+        pushAndRemoveUntil(context, FeederListScreen(), false);
       } catch (e) {
         print('_updateFeeder._sendToServer $e');
         hideProgress();
@@ -157,6 +175,5 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
         _validate = AutovalidateMode.onUserInteraction;
       });
     }
-  }*/
+  }
 }
-
