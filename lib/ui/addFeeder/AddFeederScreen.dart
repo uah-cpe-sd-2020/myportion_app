@@ -6,9 +6,6 @@ import 'package:myportion_app/services/helper.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/model/Feeder.dart';
 import 'package:myportion_app/ui/FeederList/FeederListScreen.dart';
-import 'package:myportion_app/ui/home/HomeScreen.dart';
-
-import 'package:myportion_app/main.dart';
 
 class AddFeederScreen extends StatefulWidget {
   final Feeder feeder;
