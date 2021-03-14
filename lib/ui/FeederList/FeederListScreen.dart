@@ -21,9 +21,7 @@ class _FeederListScreenState extends State<FeederListScreen> {
   List<Feeder> feeders = [];
 
   addFeeder() async {
-    Feeder feeder = await FireStoreUtils()
-        .addFeeder(new Feeder(modelType: "", serialNum: "", name: ""));
-    pushReplacement(context, new AddFeederScreen(feeder: feeder));
+    pushReplacement(context, new AddFeederScreen(feeder: new Feeder()));
   }
 
   @override

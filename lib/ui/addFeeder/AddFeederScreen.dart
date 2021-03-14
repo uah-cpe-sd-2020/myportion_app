@@ -35,10 +35,6 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
         leading: IconButton(
           icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () async {
-            Feeder temp = await FireStoreUtils().getFeeder(feeder.id);
-            if (temp.id == '') {
-              await FireStoreUtils().removeFeeder(feeder);
-            }
             pushReplacement(context, FeederListScreen());
           },
         ),
@@ -159,6 +155,9 @@ class _AddFeederScreenState extends State<AddFeederScreen> {
         feeder.name = feederName;
         feeder.modelType = "Prototype";
         feeder.serialNum = serialNumber;
+        if (feeder.id == null) {
+          feeder = await FireStoreUtils().addFeeder(feeder);
+        }
         await FireStoreUtils().updateFeeder(feeder);
 
         pushAndRemoveUntil(context, FeederListScreen(), false);
