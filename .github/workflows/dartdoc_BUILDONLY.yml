@@ -2,7 +2,7 @@ name: ONLY Build Docs
 
 on:
   push:
-    branches: [ * ]
+    branches: *
   pull_request:
     branches: [ main ]
 
