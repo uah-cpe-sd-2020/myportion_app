@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  buildAndDeployDocs:
     runs-on: ubuntu-latest
 
     # Note that this workflow uses the latest stable version of the Dart SDK.
