@@ -300,7 +300,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
         /*BEGIN*/
         //Remove once add-a-feeder is established
         await FireStoreUtils()
-            .addFeeder(new Feeder(modelNum: "Model1", name: "Feeder"));
+            .addFeeder(new Feeder(modelType: "Model1", name: "Feeder"));
         /*END*/
         Pet pet = Pet(
             rfid: '',

@@ -91,26 +91,42 @@ void main() {
 
   group('Feeder Class and Services', () {
     test('Feeder Constructs Properly', () {
-      Feeder feeder =
-          new Feeder(id: "feeder", modelNum: "Mark1", name: "Feedtron3000");
+      Feeder feeder = new Feeder(
+          id: "feeder",
+          modelType: "Mark1",
+          serialNum: "123",
+          name: "Feedtron3000");
       expect(feeder.id, "feeder");
-      expect(feeder.modelNum, "Mark1");
+      expect(feeder.modelType, "Mark1");
+      expect(feeder.serialNum, "123");
       expect(feeder.name, "Feedtron3000");
     });
 
     test('Feeder fromJson', () {
-      Feeder feeder = Feeder.fromJson(
-          {'id': "feeder", 'modelNumber': "Mark1", 'name': "Feedtron3000"});
+      Feeder feeder = Feeder.fromJson({
+        'id': "feeder",
+        'modelType': "Mark1",
+        'serialNumber': "123",
+        'name': "Feedtron3000"
+      });
       expect(feeder.id, "feeder");
-      expect(feeder.modelNum, "Mark1");
+      expect(feeder.modelType, "Mark1");
+      expect(feeder.serialNum, "123");
       expect(feeder.name, "Feedtron3000");
     });
 
     test('Feeder toJson', () {
-      Feeder feeder =
-          new Feeder(id: "feeder", modelNum: "Mark1", name: "Feedtron3000");
-      expect(feeder.toJson(),
-          {'id': "feeder", 'modelNumber': "Mark1", 'name': "Feedtron3000"});
+      Feeder feeder = new Feeder(
+          id: "feeder",
+          modelType: "Mark1",
+          serialNum: "123",
+          name: "Feedtron3000");
+      expect(feeder.toJson(), {
+        'id': "feeder",
+        'modelType': "Mark1",
+        'serialNumber': "123",
+        'name': "Feedtron3000"
+      });
     });
   });
 

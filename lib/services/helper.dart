@@ -34,6 +34,18 @@ String validatePassword(String value) {
     return null;
 }
 
+String validateSerialNumber(String value) {
+  String pattern = r'^[a-zA-Z0-9]+$';
+  RegExp regExp = new RegExp(pattern);
+  if (value.length == 0)
+  {
+      return "Model Number is required";
+  } else if (!regExp.hasMatch(value)){
+    return "Model Number must contain only digits and letters";
+  }
+  return null;
+}
+
 String validateEmail(String value) {
   Pattern pattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';

@@ -22,7 +22,6 @@ class FireStoreUtils {
         await firestore.collection(USERS).doc(uid).get();
     if (userDocument != null && userDocument.exists) {
       FireStoreUtils.userID = uid;
-      print(uid);
       return User.fromJson(userDocument.data());
     } else {
       return null;
@@ -64,6 +63,19 @@ class FireStoreUtils {
     }
   }
 
+  Future<List<dynamic>> getFeederList() async {
+    List<Feeder> temp = [];
+    QuerySnapshot feederCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .get();
+    for (var doc in feederCollection.docs) {
+      temp.add(new Feeder.fromJson(doc.data()));
+    }
+    return temp;
+  }
+
   Future<Feeder> addFeeder(Feeder feeder) async {
     Feeder temp = await firestore
         .collection(USERS)
@@ -88,6 +100,21 @@ class FireStoreUtils {
         .then((document) {
       return feeder;
     });
+  }
+
+  Future<bool> removeFeeder(Feeder feeder) async {
+    try {
+      await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(feeder.id)
+          .delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   /*NOTIFICATION*/
