@@ -18,7 +18,7 @@ jobs:
     steps:
       
       - name: Print Flutter version
-        run: which flutter
+        run: flutter --version
         
       - name: Checkout Repo
         uses: actions/checkout@v2
