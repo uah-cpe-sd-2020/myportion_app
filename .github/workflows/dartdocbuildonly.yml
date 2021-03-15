@@ -1,11 +1,12 @@
-name: Build and Deploy Docs
+name: ONLY Build Docs
 
 on:
   push:
+  pull_request:
     branches: [ main ]
 
 jobs:
-  buildAndDeployDocs:
+  buildDocs:
     runs-on: ubuntu-latest
 
     # Note that this workflow uses the latest stable version of the Dart SDK.
@@ -28,11 +29,3 @@ jobs:
 
       - name: Build docs
         run: dartdoc
-        
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./doc/api
-        
-        
