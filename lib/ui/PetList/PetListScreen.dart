@@ -18,7 +18,6 @@ class _PetListScreenState extends State<PetListScreen> {
 
   GlobalKey<FormState> _key = new GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
-  List<Pet> pets = [];
 
   addPet() async {
     pushReplacement(context, new AddPetProfileScreen(pet: new Pet()));

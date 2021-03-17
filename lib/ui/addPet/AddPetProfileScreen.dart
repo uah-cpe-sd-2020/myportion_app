@@ -12,6 +12,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:intl/intl.dart'; //for date format
 import 'package:myportion_app/constants.dart';
+import 'package:myportion_app/ui/ScheduleList/ScheduleList.dart';
+import 'package:myportion_app/ui/addSchedule/AddScheduleScreen.dart';
 
 File _image;
 
@@ -21,7 +23,7 @@ class AddPetProfileScreen extends StatefulWidget {
   AddPetProfileScreen({@required this.pet});
   @override
   State createState() =>
-      _AddPetProfileScreenState(pet, pet.name, pet.dob ?? DateFormat("yyyy-MM-dd").format(DateTime.now()), pet.type, pet.portions ?? 1, pet.lbs, pet.petProfilePictureURL);
+      _AddPetProfileScreenState(pet, pet.name, pet.dob ?? DateFormat("yyyy-MM-dd").format(DateTime.now()), pet.type, pet.lbs, pet.petProfilePictureURL);
 }
 
 class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
@@ -34,7 +36,6 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
   String petName;
   String dob;
   String type;
-  double portions;
   var lbs;
   var petProfilePictureUrl;
   List<Feeder> feeders = [];
@@ -43,25 +44,8 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
   DateTime selectedDate;
   DateTime dateOfBirth;
   String portionsLabel = "Portions: ";
-  List scheduleFeeding = [];
-  List<DynamicScheduling> listDynamic = [];
-  int count = 0;
 
-  _AddPetProfileScreenState(this.pet, this.petName, this.dob, this.type, this.portions, this.lbs, this.petProfilePictureUrl);
-
-  addDynamic() {
-    if (listDynamic.length >= 5) {
-      return;
-    }
-    listDynamic.add(new DynamicScheduling());
-    setState(() {});
-  }
-
-  submitFeeding() {
-    listDynamic.forEach(
-        (widget) => scheduleFeeding.insert(count, widget.timeCtl.text));
-    count = count + 1;
-  }
+  _AddPetProfileScreenState(this.pet, this.petName, this.dob, this.type, this.lbs, this.petProfilePictureUrl);
 
   Future<void> _selectDate(BuildContext context) async {
     var temp = dob.split("-");
@@ -79,6 +63,10 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
         selectedDate = pickedDate;
         dateOfBirth = pickedDate;
       });
+  }
+
+  addSchedule() async {
+    pushReplacement(context, new AddScheduleScreen(schedule: new Schedule()));
   }
 
   @override
@@ -368,72 +356,11 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
             ),
           ),
         ),
-        ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-                padding:
-                const EdgeInsets.only(top: 10.0, right: 5.0, left: 5.0),
-                child: new Container(
-                      decoration: new BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        border: new Border.all(
-                          color: Colors.grey[300],
-                          width: 2.0,
-                        ),
-                      ),
-                      child: new Column(children: <Widget>[
-                        new TextField(
-                          controller: new TextEditingController(text: portionsLabel+portions.toString()),
-                          enabled: false,
-                          decoration: InputDecoration(
-                          //labelText: 'Portions',
-                          contentPadding: new EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 16),
-                          fillColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius. circular(25.0),
-                          borderSide: new BorderSide(
-                          color: Color(COLOR_PRIMARY), width: 1.0)),
-                          border: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                              const Radius.circular(0.0)),
-                          ),),),
-                        new Slider(
-                          min: 0,
-                          max: 5,
-                          value: portions,
-                          divisions: 5,
-                          label: portions.toString(),
-                          onChanged: (val){
-                            setState((){portions = val;});
-                          }
-                        ),
-    ]),
-    ),
-            )),
-        ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
-              child: new Container(
-                  child: new Column(children: [
-                        new Column(children: <Widget>[
-                            new SizedBox(
-                                height: 150.0,
-                                child: new ListView.builder(
-                                    itemCount: listDynamic.length,
-                                    itemBuilder: (_, index) => listDynamic[index])),
-                            new Container(
-                                child: new RaisedButton(
-                                    onPressed: submitFeeding,
-                                    child: Text('Submit Feeding Time')))
-                ]),
-                    new FloatingActionButton(
-                      heroTag: "addFeedingTime",
-                      onPressed: addDynamic,
-                      child: new Icon(Icons.add)),
-              ])),
-            )),
+        Container(
+          width: 350,
+          height: 400,
+          child: new ScheduleList(),
+           ),
         Padding(
           padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
           child: ConstrainedBox(
@@ -473,18 +400,13 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
         pet.name = petName;
         pet.dob = DateFormat("yyyy-MM-dd").format(dateOfBirth);
         pet.type = type;
-        pet.portions = portions;
         pet.lbs = lbs;
         pet.petProfilePictureURL = petProfilePictureUrl;
-        Schedule sched = Schedule(
-          time: scheduleFeeding,
-        );
 
         if (pet.id == null) {
           pet = await FireStoreUtils().addPet(pet);
         }
 
-        await FireStoreUtils().addSchedule(sched);
         await FireStoreUtils().updatePet(pet);
         pushAndRemoveUntil(context, PetListScreen(), false);
       } catch (e) {
@@ -500,57 +422,3 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
   }
 }
 
-// ignore: must_be_immutable
-class DynamicScheduling extends StatelessWidget {
-  TextEditingController timeCtl = new TextEditingController();
-  List dynamicScheduleFeeding = [];
-  String singleTime;
-
-  String formatTimeOfDay(TimeOfDay tod) {
-    final now = new DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-    final format = DateFormat.jm(); //"6:00 AM"
-    return format.format(dt);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: new TextFormField(
-        controller: timeCtl,
-        key: Key('ScheduleFeeding'),
-        onTap: () async {
-          FocusScope.of(context).requestFocus(new FocusNode());
-          final TimeOfDay newTime = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: 7, minute: 15),
-            initialEntryMode: TimePickerEntryMode.input,
-          );
-          if (newTime != null) {
-            singleTime = newTime.toString();
-            timeCtl.text = formatTimeOfDay(newTime);
-          }
-        },
-        onSaved: (value) {
-          dynamicScheduleFeeding.add(value);
-        },
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.next,
-        onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-        decoration: InputDecoration(
-            labelText: 'Schedule Feeding',
-            contentPadding:
-                new EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            fillColor: Colors.white,
-            hintText: 'Schedule Feeding',
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide:
-                    BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25.0),
-            )),
-      ),
-    );
-  }
-}

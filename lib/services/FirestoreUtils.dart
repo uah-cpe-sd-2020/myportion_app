@@ -243,6 +243,23 @@ class FireStoreUtils {
     }
   }
 
+  Future<List<dynamic>> getScheduleList() async {
+    List<Schedule> temp = [];
+    QuerySnapshot scheduleCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .doc(FireStoreUtils.feederID)
+        .collection(PETS)
+        .doc(FireStoreUtils.petID)
+        .collection(SCHEDULES)
+        .get();
+    for (var doc in scheduleCollection.docs) {
+      temp.add(new Schedule.fromJson(doc.data()));
+    }
+    return temp;
+  }
+
   Future<Schedule> addSchedule(Schedule schedule) async {
     return await firestore
         .collection(USERS)
@@ -272,5 +289,24 @@ class FireStoreUtils {
         .then((document) {
       return schedule;
     });
+  }
+
+  Future<bool> removeSchedule(Schedule schedule) async {
+    try {
+      await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(FireStoreUtils.feederID)
+          .collection(PETS)
+          .doc(FireStoreUtils.petID)
+          .collection(SCHEDULES)
+          .doc(schedule.id)
+          .delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }
