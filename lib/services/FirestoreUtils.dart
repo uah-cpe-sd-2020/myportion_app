@@ -162,6 +162,21 @@ class FireStoreUtils {
     }
   }
 
+  Future<List<dynamic>> getPetList() async {
+    List<Pet> temp = [];
+    QuerySnapshot petCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .doc(FireStoreUtils.feederID)
+        .collection(PETS)
+        .get();
+    for (var doc in petCollection.docs) {
+      temp.add(new Pet.fromJson(doc.data()));
+    }
+    return temp;
+  }
+
   Future<Pet> addPet(Pet pet) async {
     Pet temp = await firestore
         .collection(USERS)
@@ -190,6 +205,23 @@ class FireStoreUtils {
         .then((document) {
       return pet;
     });
+  }
+
+  Future<bool> removePet(Pet pet) async {
+    try {
+      await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(FireStoreUtils.feederID)
+          .collection(PETS)
+          .doc(pet.id)
+          .delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   /*SCHEDULE*/

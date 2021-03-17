@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Pet {
   String rfid = '';
-  Timestamp dob = Timestamp.now();
+  String dob = '';
   String id;
   String name = '';
   String type = '';
+  num portions = 0;
   num lbs = 0;
   String petProfilePictureURL = '';
 
@@ -15,6 +16,7 @@ class Pet {
       this.id,
       this.name,
       this.type,
+      this.portions,
       this.lbs,
       this.petProfilePictureURL});
 
@@ -27,6 +29,7 @@ class Pet {
         id: parsedJson['id'] ?? '',
         name: parsedJson['name'] ?? '',
         type: parsedJson['type'] ?? '',
+        portions: parsedJson['portions'] ?? 0,
         lbs: parsedJson['lbs'] ?? 0,
         petProfilePictureURL: parsedJson['petProfilePictureURL'] ?? '');
   }
@@ -38,6 +41,7 @@ class Pet {
       'id': this.id,
       'name': this.name,
       'type': this.type,
+      'portions': this.portions,
       'lbs': this.lbs,
       'petProfilePictureURL': this.petProfilePictureURL,
     };

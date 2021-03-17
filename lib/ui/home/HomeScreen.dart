@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/model/User.dart';
 import 'package:myportion_app/ui/FeederList/FeederListScreen.dart';
-import 'package:myportion_app/ui/addPet/AddPetProfileScreen.dart';
+import 'package:myportion_app/ui/PetList/PetListScreen.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
@@ -66,13 +66,13 @@ class _HomeState extends State<HomeScreen> {
             ),
             ListTile(
               title: Text(
-                'Add Pet Profile',
+                'Pet List',
                 style: TextStyle(color: Colors.black),
               ),
               leading: Transform.rotate(
                   angle: 0, child: Icon(Icons.pets, color: Colors.black)),
               onTap: () async {
-                pushReplacement(context, new AddPetProfileScreen());
+                pushReplacement(context, new PetListScreen());
               },
             ),
             ListTile(

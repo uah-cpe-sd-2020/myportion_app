@@ -72,11 +72,26 @@ class _FeederListScreenState extends State<FeederListScreen> {
                           return Card(
                             child: ListTile(
                                 title: Text(item.name + ' - ' + item.modelType),
-                                trailing: Icon(Icons.more_vert),
-                                onTap: () async {
-                                  pushReplacement(context,
-                                      new AddFeederScreen(feeder: item));
-                                }),
+                                trailing: Wrap(
+                                  spacing: 8,
+                                  children: <Widget>[
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () async {
+                                        FireStoreUtils().removeFeeder(item);
+                                        pushReplacement(context,
+                                            new FeederListScreen());
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.more_vert),
+                                      onPressed: () async {
+                                        pushReplacement(context,
+                                            new AddFeederScreen(feeder: item));
+                                      },
+                                    ),
+                                  ],
+                                ),),
                           );
                         },
                       )
