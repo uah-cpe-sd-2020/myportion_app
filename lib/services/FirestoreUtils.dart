@@ -63,6 +63,29 @@ class FireStoreUtils {
     }
   }
 
+  Future<Feeder> getFeederFromPet(String pid) async {
+    QuerySnapshot feederCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .get();
+    for (var doc in feederCollection.docs) {
+      QuerySnapshot petCollection = await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(doc.id)
+          .collection(PETS)
+          .get();
+      for (var pet in petCollection.docs) {
+        if (pet.data()["id"] == pid) {
+          return Feeder.fromJson(doc.data());
+        }
+      }
+    }
+    return null;
+  }
+
   Future<List<dynamic>> getFeederList() async {
     List<Feeder> temp = [];
     QuerySnapshot feederCollection = await firestore
@@ -173,6 +196,28 @@ class FireStoreUtils {
         .get();
     for (var doc in petCollection.docs) {
       temp.add(new Pet.fromJson(doc.data()));
+    }
+    return temp;
+  }
+
+  Future<List<dynamic>> getAllPets() async {
+    List<Pet> temp = [];
+    QuerySnapshot feederCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .get();
+    for (var doc in feederCollection.docs) {
+      QuerySnapshot petCollection = await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(doc.id)
+          .collection(PETS)
+          .get();
+      for (var pet in petCollection.docs) {
+        temp.add(new Pet.fromJson(pet.data()));
+      }
     }
     return temp;
   }

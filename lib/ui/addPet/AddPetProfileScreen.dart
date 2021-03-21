@@ -19,45 +19,50 @@ File _image;
 
 class AddPetProfileScreen extends StatefulWidget {
   final Pet pet;
+  final String feederName;
+  final String feederID;
 
-  AddPetProfileScreen({@required this.pet});
-  @override
-  State createState() =>
-      _AddPetProfileScreenState(pet, pet.name, pet.dob ?? DateFormat("yyyy-MM-dd").format(DateTime.now()), pet.type, pet.lbs, pet.petProfilePictureURL);
+  AddPetProfileScreen(this.pet, [this.feederName, this.feederID]);
+  State createState() => _AddPetProfileScreenState(pet, pet.name, pet.dob,
+      pet.type, pet.lbs, pet.petProfilePictureURL, feederName, feederID);
 }
 
 class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker();
-  TextEditingController timeCtl = new TextEditingController();
-  TextEditingController dateCtl = new TextEditingController();
+  TextEditingController dateCtl;
+  TextEditingController weightCtl;
   GlobalKey<FormState> _key = new GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
   Pet pet;
   String petName;
   String dob;
   String type;
-  var lbs;
+  num lbs;
   var petProfilePictureUrl;
-  List<Feeder> feeders = [];
+  Feeder feeder;
   String feederID;
-  String singleTime;
+  String feederName;
   DateTime selectedDate;
   DateTime dateOfBirth;
-  String portionsLabel = "Portions: ";
 
-  _AddPetProfileScreenState(this.pet, this.petName, this.dob, this.type, this.lbs, this.petProfilePictureUrl);
+  _AddPetProfileScreenState(this.pet, this.petName, this.dob, this.type,
+      this.lbs, this.petProfilePictureUrl, this.feederName, this.feederID);
 
   Future<void> _selectDate(BuildContext context) async {
-    var temp = dob.split("-");
-    String year = temp.elementAt(0);
-    String month = temp.elementAt(1);
-    String day = temp.elementAt(2);
-    selectedDate = DateTime.parse(year+"-"+month+"-"+day);
+    if (dob != null) {
+      var temp = dob.split("-");
+      String year = temp.elementAt(0);
+      String month = temp.elementAt(1);
+      String day = temp.elementAt(2);
+      selectedDate = DateTime.parse(year + "-" + month + "-" + day);
+    } else {
+      selectedDate = DateTime.now();
+    }
     final DateTime pickedDate = await showDatePicker(
         context: context,
         initialDate: selectedDate ?? DateTime.now(),
-        firstDate: DateTime(2000,1,1),
-        lastDate: DateTime(2050,1,1));
+        firstDate: DateTime(2000, 1, 1),
+        lastDate: DateTime(2050, 1, 1));
     if (pickedDate != null && pickedDate != selectedDate)
       setState(() {
         selectedDate = pickedDate;
@@ -67,6 +72,25 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
 
   addSchedule() async {
     pushReplacement(context, new AddScheduleScreen(schedule: new Schedule()));
+  }
+
+  /* getFeeder() async {
+    if (pet.id != null) {
+      feeder = await FireStoreUtils().getFeederFromPet(pet.id);
+      feederName = feeder.name;
+      feederID = feeder.id;
+    } else {
+      feederName = null;
+      feederID = null;
+    }
+  }
+ */
+  @override
+  void initState() {
+    super.initState();
+    dateCtl = new TextEditingController(text: dob);
+    weightCtl = new TextEditingController(text: lbs.toString());
+    //getFeeder();
   }
 
   @override
@@ -161,8 +185,8 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
     return new Column(
       children: <Widget>[
         new Align(
-            alignment: Alignment.topLeft,
-            ),
+          alignment: Alignment.topLeft,
+        ),
         Padding(
           padding:
               const EdgeInsets.only(left: 8.0, top: 32, right: 8, bottom: 8),
@@ -205,38 +229,53 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
           constraints: BoxConstraints(minWidth: double.infinity),
           child: Padding(
             padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
-            child: new DropdownButton<String>(
-              hint: Text('Select Feeder ID'),
-              value: feederID,
-              icon: Icon(Icons.keyboard_arrow_down),
-              iconSize: 20,
-              elevation: 16,
-              style: TextStyle(color: Colors.grey),
-              underline: Container(
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(width: 1.0, style: BorderStyle.solid),
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  ),
-                ),
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  feederID = newValue;
-                });
-              },
-              items: <String>['Feeder 1', 'Feeder 2', 'Feeder 3']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Color.fromRGBO(54, 38, 83, 1)),
-                  ),
-                );
-              }).toList(),
-            ),
+            child: FutureBuilder<List>(
+                future: FireStoreUtils().getFeederList(),
+                initialData: List(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? DropdownButton<String>(
+                          hint: Text('Select Feeder ID'),
+                          value: feederName,
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          iconSize: 20,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.grey),
+                          underline: Container(
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1.0, style: BorderStyle.solid),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)),
+                              ),
+                            ),
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              feederName = newValue;
+                              feederID = snapshot
+                                  .data[snapshot.data.indexWhere(
+                                      (item) => item.name == newValue)]
+                                  .id;
+                            });
+                          },
+                          items: snapshot.data
+                              .map((value) => DropdownMenuItem<String>(
+                                    child: Text(
+                                      value.name,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(54, 38, 83, 1)),
+                                    ),
+                                    value: value.name,
+                                  ))
+                              .toList(),
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(),
+                        );
+                }),
           ),
         ),
         ConstrainedBox(
@@ -266,48 +305,52 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
                           borderRadius: BorderRadius.circular(25.0),
                         ))))),
         ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-                padding:
-                const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
-                child: new TextFormField(
-                          controller: dateCtl,
-                          key: Key('DateOfBirth'),
-                          onTap: () async {
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                            await _selectDate(context);
-                            dateCtl.text = DateFormat('yyyy-MM-dd').format(selectedDate);
-                          },
-                          decoration: InputDecoration(
-                          labelText: 'Date of Birth',
-                          contentPadding:
-                            new EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                          fillColor: Colors.white,
-                          hintText: 'Date of Birth',
-                          focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide:
-                            BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),),
-                        ),),
-                    ),
+          constraints: BoxConstraints(minWidth: double.infinity),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+            child: new TextFormField(
+              controller: dateCtl,
+              key: Key('DateOfBirth'),
+              //keyboardType: TextInputType.datetime,
+              onTap: () async {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                await _selectDate(context);
+                dateCtl.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+              },
+              decoration: InputDecoration(
+                labelText: 'Date of Birth',
+                contentPadding:
+                    new EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                fillColor: Colors.white,
+                hintText: 'Date of Birth',
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+              ),
             ),
+          ),
+        ),
         ConstrainedBox(
             constraints: BoxConstraints(minWidth: double.infinity),
             child: Padding(
                 padding:
-                const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+                    const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
                 child: TextFormField(
-                    initialValue: lbs,
+                    initialValue: lbs != null ? lbs.toString() : null,
                     key: Key('Weight'),
+                    keyboardType: TextInputType.number,
                     onSaved: (String val) {
-                      lbs = val;
+                      lbs = int.parse(val);
                     },
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                     decoration: InputDecoration(
                         labelText: 'Weight',
+                        hintText: 'Weight',
                         contentPadding: new EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
                         fillColor: Colors.white,
@@ -360,7 +403,7 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
           width: 350,
           height: 400,
           child: new ScheduleList(),
-           ),
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
           child: ConstrainedBox(
@@ -393,12 +436,19 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
       try {
         /*BEGIN*/
         //Remove once add-a-feeder is established
-        await FireStoreUtils()
-            .addFeeder(new Feeder(modelType: "Model1", name: "Feeder"));
+        /* await FireStoreUtils()
+            .addFeeder(new Feeder(modelType: "Model1", name: "Feeder")); */
         /*END*/
+        print("FeederID - " + feederID);
+        print("FeederName - " + feederName);
+        print("Petname - " + petName);
+        print("dob - " + dateCtl.text);
+        print("Type - " + type);
+        print("Weight - " + lbs.toString());
+        FireStoreUtils.feederID = feederID;
         pet.rfid = '';
         pet.name = petName;
-        pet.dob = DateFormat("yyyy-MM-dd").format(dateOfBirth);
+        pet.dob = dateCtl.text;
         pet.type = type;
         pet.lbs = lbs;
         pet.petProfilePictureURL = petProfilePictureUrl;
@@ -421,4 +471,3 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
     }
   }
 }
-

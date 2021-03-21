@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/main.dart';
+import 'package:myportion_app/model/Feeder.dart';
 import 'package:myportion_app/model/Pet.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
@@ -20,7 +21,7 @@ class _PetListScreenState extends State<PetListScreen> {
   AutovalidateMode _validate = AutovalidateMode.disabled;
 
   addPet() async {
-    pushReplacement(context, new AddPetProfileScreen(pet: new Pet()));
+    pushReplacement(context, new AddPetProfileScreen(new Pet()));
   }
 
   @override
@@ -59,42 +60,47 @@ class _PetListScreenState extends State<PetListScreen> {
           height: 670,
           child: Scaffold(
             body: FutureBuilder<List>(
-              future: FireStoreUtils().getPetList(),
+              future: FireStoreUtils().getAllPets(),
               initialData: List(),
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (_, int position) {
-                    final item = snapshot.data[position];
-                    //get your item data here ...
-                    return Card(
-                      child: ListTile(
-                          title: Text(item.name + ' - ' + item.type),
-                          trailing: Wrap(
-                            spacing: 12,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () async {
-                                  FireStoreUtils().removePet(item);
-                                },
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (_, int position) {
+                          final item = snapshot.data[position];
+                          //get your item data here ...
+                          return Card(
+                            child: ListTile(
+                              title: Text(item.name + ' - ' + item.type),
+                              trailing: Wrap(
+                                spacing: 12,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () async {
+                                      FireStoreUtils().removePet(item);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.more_vert),
+                                    onPressed: () async {
+                                      Feeder feeder = await FireStoreUtils()
+                                          .getFeederFromPet(item.id);
+                                      pushReplacement(
+                                          context,
+                                          new AddPetProfileScreen(
+                                              item, feeder.name, feeder.id));
+                                    },
+                                  ),
+                                ],
                               ),
-                              IconButton(
-                                icon: Icon(Icons.more_vert),
-                                onPressed: () async {
-                                  pushReplacement(context,
-                                      new AddPetProfileScreen(pet: item));
-                                },
-                              ),
-                            ],
-                          ),),
-                    );
-                  },
-                )
+                            ),
+                          );
+                        },
+                      )
                     : Center(
-                      child: CircularProgressIndicator(),
-                );
+                        child: CircularProgressIndicator(),
+                      );
               },
             ),
             floatingActionButton: FloatingActionButton(
