@@ -37,10 +37,9 @@ String validatePassword(String value) {
 String validateSerialNumber(String value) {
   String pattern = r'^[a-zA-Z0-9]+$';
   RegExp regExp = new RegExp(pattern);
-  if (value.length == 0)
-  {
-      return "Model Number is required";
-  } else if (!regExp.hasMatch(value)){
+  if (value.length == 0) {
+    return "Model Number is required";
+  } else if (!regExp.hasMatch(value)) {
     return "Model Number must contain only digits and letters";
   }
   return null;
@@ -131,6 +130,10 @@ pushReplacement(BuildContext context, Widget destination) {
 push(BuildContext context, Widget destination) {
   Navigator.of(context)
       .push(new MaterialPageRoute(builder: (context) => destination));
+}
+
+pop(BuildContext context) {
+  Navigator.pop(context);
 }
 
 pushAndRemoveUntil(BuildContext context, Widget destination, bool predict) {

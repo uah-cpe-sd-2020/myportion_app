@@ -9,6 +9,7 @@ import 'package:myportion_app/model/User.dart';
 import 'package:myportion_app/ui/FeederList/FeederListScreen.dart';
 import 'package:myportion_app/ui/PetList/PetListScreen.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
+import 'package:myportion_app/ui/ScheduleList/ScheduleList.dart';
 import 'package:myportion_app/ui/auth/AuthScreen.dart';
 
 import 'package:myportion_app/services/helper.dart';
@@ -66,17 +67,6 @@ class _HomeState extends State<HomeScreen> {
             ),
             ListTile(
               title: Text(
-                'Pet List',
-                style: TextStyle(color: Colors.black),
-              ),
-              leading: Transform.rotate(
-                  angle: 0, child: Icon(Icons.pets, color: Colors.black)),
-              onTap: () async {
-                pushReplacement(context, new PetListScreen());
-              },
-            ),
-            ListTile(
-              title: Text(
                 'Feeder List',
                 style: TextStyle(color: Colors.black),
               ),
@@ -88,6 +78,28 @@ class _HomeState extends State<HomeScreen> {
                   )),
               onTap: () async {
                 pushReplacement(context, new FeederListScreen());
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Pet List',
+                style: TextStyle(color: Colors.black),
+              ),
+              leading: Transform.rotate(
+                  angle: 0, child: Icon(Icons.pets, color: Colors.black)),
+              onTap: () async {
+                pushReplacement(context, new PetListScreen());
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Schedule List',
+                style: TextStyle(color: Colors.black),
+              ),
+              leading: Transform.rotate(
+                  angle: 0, child: Icon(Icons.schedule, color: Colors.black)),
+              onTap: () async {
+                pushReplacement(context, new ScheduleList());
               },
             ),
           ],

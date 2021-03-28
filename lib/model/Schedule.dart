@@ -1,10 +1,11 @@
 class Schedule {
   String id;
   String name = '';
+  String petName = '';
   num portion = 0;
   String time = '';
 
-  Schedule({this.id, this.name, this.portion, this.time});
+  Schedule({this.id, this.name, this.petName, this.portion, this.time});
 
   /* CLASS FUNCTIONS CAN GO HERE */
 
@@ -12,6 +13,7 @@ class Schedule {
     return new Schedule(
         id: parsedJson['id'] ?? '',
         name: parsedJson['name'] ?? '',
+        petName: parsedJson['petName'] ?? '',
         portion: parsedJson['portion'] ?? 0,
         time: parsedJson['time'] ?? '');
   }
@@ -20,6 +22,7 @@ class Schedule {
     return {
       'id': this.id,
       'name': this.name,
+      'petName': this.petName,
       'portion': this.portion,
       'time': this.time,
     };

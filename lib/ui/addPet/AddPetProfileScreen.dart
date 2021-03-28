@@ -5,15 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myportion_app/model/Feeder.dart';
 import 'package:myportion_app/model/Pet.dart';
-import 'package:myportion_app/model/Schedule.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
 import 'package:myportion_app/ui/PetList/PetListScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:intl/intl.dart'; //for date format
 import 'package:myportion_app/constants.dart';
-import 'package:myportion_app/ui/ScheduleList/ScheduleList.dart';
-import 'package:myportion_app/ui/addSchedule/AddScheduleScreen.dart';
 
 File _image;
 
@@ -70,27 +67,11 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
       });
   }
 
-  addSchedule() async {
-    pushReplacement(context, new AddScheduleScreen(schedule: new Schedule()));
-  }
-
-  /* getFeeder() async {
-    if (pet.id != null) {
-      feeder = await FireStoreUtils().getFeederFromPet(pet.id);
-      feederName = feeder.name;
-      feederID = feeder.id;
-    } else {
-      feederName = null;
-      feederID = null;
-    }
-  }
- */
   @override
   void initState() {
     super.initState();
     dateCtl = new TextEditingController(text: dob);
     weightCtl = new TextEditingController(text: lbs.toString());
-    //getFeeder();
   }
 
   @override
@@ -311,7 +292,6 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
             child: new TextFormField(
               controller: dateCtl,
               key: Key('DateOfBirth'),
-              //keyboardType: TextInputType.datetime,
               onTap: () async {
                 FocusScope.of(context).requestFocus(new FocusNode());
                 await _selectDate(context);
@@ -399,11 +379,6 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
             ),
           ),
         ),
-        Container(
-          width: 350,
-          height: 400,
-          child: new ScheduleList(),
-        ),
         Padding(
           padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
           child: ConstrainedBox(
@@ -434,17 +409,6 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
       _key.currentState.save();
       showProgress(context, 'Updating pet, Please wait...', false);
       try {
-        /*BEGIN*/
-        //Remove once add-a-feeder is established
-        /* await FireStoreUtils()
-            .addFeeder(new Feeder(modelType: "Model1", name: "Feeder")); */
-        /*END*/
-        print("FeederID - " + feederID);
-        print("FeederName - " + feederName);
-        print("Petname - " + petName);
-        print("dob - " + dateCtl.text);
-        print("Type - " + type);
-        print("Weight - " + lbs.toString());
         FireStoreUtils.feederID = feederID;
         pet.rfid = '';
         pet.name = petName;
@@ -458,6 +422,7 @@ class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
         }
 
         await FireStoreUtils().updatePet(pet);
+
         pushAndRemoveUntil(context, PetListScreen(), false);
       } catch (e) {
         print('_updatepet._sendToServer $e');
