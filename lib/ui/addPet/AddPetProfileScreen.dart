@@ -1,52 +1,77 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myportion_app/model/Feeder.dart';
 import 'package:myportion_app/model/Pet.dart';
-import 'package:myportion_app/model/Schedule.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
-import 'package:myportion_app/ui/home/HomeScreen.dart';
+import 'package:myportion_app/ui/PetList/PetListScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myportion_app/services/helper.dart';
 import 'package:intl/intl.dart'; //for date format
 import 'package:myportion_app/constants.dart';
-import 'package:myportion_app/main.dart';
 
 File _image;
 
 class AddPetProfileScreen extends StatefulWidget {
-  @override
-  State createState() => _AddPetProfileState();
+  final Pet pet;
+  final String feederName;
+  final String feederID;
+
+  AddPetProfileScreen(this.pet, [this.feederName, this.feederID]);
+  State createState() => _AddPetProfileScreenState(pet, pet.name, pet.dob,
+      pet.type, pet.lbs, pet.petProfilePictureURL, feederName, feederID);
 }
 
-class _AddPetProfileState extends State<AddPetProfileScreen> {
+class _AddPetProfileScreenState extends State<AddPetProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker();
-  TextEditingController timeCtl_1 = new TextEditingController();
-  TextEditingController timeCtl_2 = new TextEditingController();
+  TextEditingController dateCtl;
+  TextEditingController weightCtl;
   GlobalKey<FormState> _key = new GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
+  Pet pet;
   String petName;
+  String dob;
+  String type;
+  num lbs;
+  var petProfilePictureUrl;
+  Feeder feeder;
   String feederID;
-  String singleTime;
-  List scheduleFeeding = [];
-  List<DynamicScheduling> listDynamic = [];
-  int count = 0;
+  String feederName;
+  DateTime selectedDate;
+  DateTime dateOfBirth;
 
-  addDynamic() {
-    if (listDynamic.length >= 5) {
-      return;
+  _AddPetProfileScreenState(this.pet, this.petName, this.dob, this.type,
+      this.lbs, this.petProfilePictureUrl, this.feederName, this.feederID);
+
+  Future<void> _selectDate(BuildContext context) async {
+    if (dob != null) {
+      var temp = dob.split("-");
+      String year = temp.elementAt(0);
+      String month = temp.elementAt(1);
+      String day = temp.elementAt(2);
+      selectedDate = DateTime.parse(year + "-" + month + "-" + day);
+    } else {
+      selectedDate = DateTime.now();
     }
-    listDynamic.add(new DynamicScheduling());
-    setState(() {});
+    final DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: selectedDate ?? DateTime.now(),
+        firstDate: DateTime(2000, 1, 1),
+        lastDate: DateTime(2050, 1, 1));
+    if (pickedDate != null && pickedDate != selectedDate)
+      setState(() {
+        selectedDate = pickedDate;
+        dateOfBirth = pickedDate;
+      });
   }
 
-  submitFeeding() {
-    listDynamic.forEach(
-        (widget) => scheduleFeeding.insert(count, widget.timeCtl.text));
-    count = count + 1;
+  @override
+  void initState() {
+    super.initState();
+    dateCtl = new TextEditingController(text: dob);
+    weightCtl = new TextEditingController(text: lbs.toString());
   }
 
   @override
@@ -58,12 +83,19 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(COLOR_PRIMARY),
+        title: Text('Update Pet'),
+        leading: IconButton(
+          icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () async {
+            pushReplacement(context, PetListScreen());
+          },
+        ),
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
         child: new Container(
-          margin: new EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
+          margin: new EdgeInsets.only(left: 2.0, right: 2, bottom: 2),
           child: new Form(
             key: _key,
             autovalidateMode: _validate,
@@ -81,7 +113,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
     }
     if (response.file != null) {
       setState(() {
-        _image = File(response.file.path);
+        petProfilePictureUrl = File(response.file.path);
       });
     }
   }
@@ -102,7 +134,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                 await _imagePicker.getImage(source: ImageSource.gallery);
             if (image != null)
               setState(() {
-                _image = File(image.path);
+                petProfilePictureUrl = File(image.path);
               });
           },
         ),
@@ -115,7 +147,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
                 await _imagePicker.getImage(source: ImageSource.camera);
             if (image != null)
               setState(() {
-                _image = File(image.path);
+                petProfilePictureUrl = File(image.path);
               });
           },
         )
@@ -134,14 +166,8 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
     return new Column(
       children: <Widget>[
         new Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              'Create new pet profile',
-              style: TextStyle(
-                  color: Color(COLOR_PRIMARY),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25.0),
-            )),
+          alignment: Alignment.topLeft,
+        ),
         Padding(
           padding:
               const EdgeInsets.only(left: 8.0, top: 32, right: 8, bottom: 8),
@@ -183,10 +209,145 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
         ConstrainedBox(
           constraints: BoxConstraints(minWidth: double.infinity),
           child: Padding(
-            padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-            child: DropdownButton<String>(
-              hint: Text('Select Feeder ID'),
-              value: feederID,
+            padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+            child: FutureBuilder<List>(
+                future: FireStoreUtils().getFeederList(),
+                initialData: List(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? DropdownButton<String>(
+                          hint: Text('Select Feeder ID'),
+                          value: feederName,
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          iconSize: 20,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.grey),
+                          underline: Container(
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1.0, style: BorderStyle.solid),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0)),
+                              ),
+                            ),
+                          ),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              feederName = newValue;
+                              feederID = snapshot
+                                  .data[snapshot.data.indexWhere(
+                                      (item) => item.name == newValue)]
+                                  .id;
+                            });
+                          },
+                          items: snapshot.data
+                              .map((value) => DropdownMenuItem<String>(
+                                    child: Text(
+                                      value.name,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(54, 38, 83, 1)),
+                                    ),
+                                    value: value.name,
+                                  ))
+                              .toList(),
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(),
+                        );
+                }),
+          ),
+        ),
+        ConstrainedBox(
+            constraints: BoxConstraints(minWidth: double.infinity),
+            child: Padding(
+                padding:
+                    const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+                child: TextFormField(
+                    initialValue: petName,
+                    key: Key('PetName'),
+                    validator: validateName,
+                    onSaved: (String val) {
+                      petName = val;
+                    },
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                    decoration: InputDecoration(
+                        labelText: 'Pet Name',
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                                color: Color(COLOR_PRIMARY), width: 2.0)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                        ))))),
+        ConstrainedBox(
+          constraints: BoxConstraints(minWidth: double.infinity),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+            child: new TextFormField(
+              controller: dateCtl,
+              key: Key('DateOfBirth'),
+              onTap: () async {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                await _selectDate(context);
+                dateCtl.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+              },
+              decoration: InputDecoration(
+                labelText: 'Date of Birth',
+                contentPadding:
+                    new EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                fillColor: Colors.white,
+                hintText: 'Date of Birth',
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+              ),
+            ),
+          ),
+        ),
+        ConstrainedBox(
+            constraints: BoxConstraints(minWidth: double.infinity),
+            child: Padding(
+                padding:
+                    const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+                child: TextFormField(
+                    initialValue: lbs != null ? lbs.toString() : null,
+                    key: Key('Weight'),
+                    keyboardType: TextInputType.number,
+                    onSaved: (String val) {
+                      lbs = int.parse(val);
+                    },
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                    decoration: InputDecoration(
+                        labelText: 'Weight',
+                        hintText: 'Weight',
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                                color: Color(COLOR_PRIMARY), width: 2.0)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                        ))))),
+        ConstrainedBox(
+          constraints: BoxConstraints(minWidth: double.infinity),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+            child: new DropdownButton<String>(
+              hint: Text('Select Pet Type'),
+              value: type,
               icon: Icon(Icons.keyboard_arrow_down),
               iconSize: 20,
               elevation: 16,
@@ -201,10 +362,10 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
               ),
               onChanged: (String newValue) {
                 setState(() {
-                  feederID = newValue;
+                  type = newValue;
                 });
               },
-              items: <String>['Feeder 1', 'Feeder 2', 'Feeder 3']
+              items: <String>['Cat', 'Dog']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -218,62 +379,14 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
             ),
           ),
         ),
-        ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-                padding:
-                    const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                child: TextFormField(
-                    key: Key('PetName'),
-                    validator: validateName,
-                    onSaved: (String val) {
-                      petName = val;
-                    },
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                    decoration: InputDecoration(
-                        contentPadding: new EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Pet Name',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(COLOR_PRIMARY), width: 2.0)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ))))),
-        ConstrainedBox(
-            constraints: BoxConstraints(minWidth: double.infinity),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-              child: new Container(
-                  child: new Column(children: [
-                new Column(children: <Widget>[
-                  new SizedBox(
-                      height: 150.0,
-                      child: new ListView.builder(
-                          itemCount: listDynamic.length,
-                          itemBuilder: (_, index) => listDynamic[index])),
-                  new Container(
-                      child: new RaisedButton(
-                          onPressed: submitFeeding,
-                          child: Text('Submit Feeding Time')))
-                ]),
-                new FloatingActionButton(
-                    heroTag: "addFeedingTime",
-                    onPressed: addDynamic,
-                    child: new Icon(Icons.add)),
-              ])),
-            )),
         Padding(
-          padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40.0),
+          padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minWidth: double.infinity),
             child: RaisedButton(
               color: Color(COLOR_PRIMARY),
               child: Text(
-                'Add Pet',
+                'Submit',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               textColor: Colors.white,
@@ -283,7 +396,7 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.0),
                   side: BorderSide(color: Color(COLOR_PRIMARY))),
-              key: Key('AddPetButton'),
+              key: Key('UpdatePet'),
             ),
           ),
         ),
@@ -294,97 +407,32 @@ class _AddPetProfileState extends State<AddPetProfileScreen> {
   _sendToServer() async {
     if (_key.currentState.validate()) {
       _key.currentState.save();
-      showProgress(context, 'Adding new pet, Please wait...', false);
-      var profilePicUrl = '';
+      showProgress(context, 'Updating pet, Please wait...', false);
       try {
-        /*BEGIN*/
-        //Remove once add-a-feeder is established
-        await FireStoreUtils()
-            .addFeeder(new Feeder(modelType: "Model1", name: "Feeder"));
-        /*END*/
-        Pet pet = Pet(
-            rfid: '',
-            dob: Timestamp.now(),
-            id: '',
-            name: petName,
-            type: 'Dog',
-            lbs: 17,
-            petProfilePictureURL: profilePicUrl);
-        pet = await FireStoreUtils().addPet(pet);
-        if (_image != null) {
-          updateProgress('Uploading image, Please wait...');
-          profilePicUrl = await FireStoreUtils()
-              .uploadUserImageToFireStorage(_image, pet.id);
+        FireStoreUtils.feederID = feederID;
+        pet.rfid = '';
+        pet.name = petName;
+        pet.dob = dateCtl.text;
+        pet.type = type;
+        pet.lbs = lbs;
+        pet.petProfilePictureURL = petProfilePictureUrl;
+
+        if (pet.id == null) {
+          pet = await FireStoreUtils().addPet(pet);
         }
-        Schedule sched = Schedule(
-          time: scheduleFeeding,
-        );
-        await FireStoreUtils().addSchedule(sched);
-        pushAndRemoveUntil(
-            context, HomeScreen(user: MyAppState.currentUser), false);
+
+        await FireStoreUtils().updatePet(pet);
+
+        pushAndRemoveUntil(context, PetListScreen(), false);
       } catch (e) {
-        print('_addpet._sendToServer $e');
+        print('_updatepet._sendToServer $e');
         hideProgress();
-        showAlertDialog(context, 'Failed', 'Couldn\'t add pet');
+        showAlertDialog(context, 'Failed', 'Couldn\'t update pet profile');
       }
     } else {
       setState(() {
         _validate = AutovalidateMode.onUserInteraction;
       });
     }
-  }
-}
-
-// ignore: must_be_immutable
-class DynamicScheduling extends StatelessWidget {
-  TextEditingController timeCtl = new TextEditingController();
-  List dynamicScheduleFeeding = [];
-  String singleTime;
-
-  String formatTimeOfDay(TimeOfDay tod) {
-    final now = new DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-    final format = DateFormat.jm(); //"6:00 AM"
-    return format.format(dt);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: new TextFormField(
-        controller: timeCtl,
-        key: Key('ScheduleFeeding'),
-        onTap: () async {
-          FocusScope.of(context).requestFocus(new FocusNode());
-          final TimeOfDay newTime = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: 7, minute: 15),
-            initialEntryMode: TimePickerEntryMode.input,
-          );
-          if (newTime != null) {
-            singleTime = newTime.toString();
-            timeCtl.text = formatTimeOfDay(newTime);
-          }
-        },
-        onSaved: (value) {
-          dynamicScheduleFeeding.add(value);
-        },
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.next,
-        onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-        decoration: InputDecoration(
-            contentPadding:
-                new EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            fillColor: Colors.white,
-            hintText: 'Schedule Feeding',
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide:
-                    BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25.0),
-            )),
-      ),
-    );
   }
 }

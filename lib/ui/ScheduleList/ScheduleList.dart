@@ -2,26 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/main.dart';
-import 'package:myportion_app/model/Feeder.dart';
+import 'package:myportion_app/model/Pet.dart';
+import 'package:myportion_app/model/Schedule.dart';
 import 'package:myportion_app/services/helper.dart';
-import 'package:myportion_app/ui/addFeeder/AddFeederScreen.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
+import 'package:myportion_app/ui/addSchedule/AddScheduleScreen.dart';
 import 'package:myportion_app/ui/home/HomeScreen.dart';
 
-class FeederListScreen extends StatefulWidget {
+class ScheduleList extends StatefulWidget {
   @override
-  State createState() => _FeederListScreenState();
+  State createState() => _ScheduleListState();
 }
 
-class _FeederListScreenState extends State<FeederListScreen> {
-  _FeederListScreenState();
+class _ScheduleListState extends State<ScheduleList> {
+  _ScheduleListState();
 
   GlobalKey<FormState> _key = new GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
-  List<Feeder> feeders = [];
 
-  addFeeder() async {
-    pushReplacement(context, new AddFeederScreen(feeder: new Feeder()));
+  addSchedule() async {
+    pushReplacement(context, new AddScheduleScreen(new Schedule()));
   }
 
   @override
@@ -29,7 +29,7 @@ class _FeederListScreenState extends State<FeederListScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(COLOR_PRIMARY),
-        title: Text('List Of Feeders'),
+        title: Text('List of Schedules'),
         leading: IconButton(
           icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () async {
@@ -60,7 +60,7 @@ class _FeederListScreenState extends State<FeederListScreen> {
           height: 670,
           child: Scaffold(
             body: FutureBuilder<List>(
-              future: FireStoreUtils().getFeederList(),
+              future: FireStoreUtils().getAllSchedules(),
               initialData: List(),
               builder: (context, snapshot) {
                 return snapshot.hasData
@@ -71,27 +71,34 @@ class _FeederListScreenState extends State<FeederListScreen> {
                           //get your item data here ...
                           return Card(
                             child: ListTile(
-                                title: Text(item.name + ' - ' + item.modelType),
-                                trailing: Wrap(
-                                  spacing: 8,
-                                  children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () async {
-                                        FireStoreUtils().removeFeeder(item);
-                                        pushReplacement(context,
-                                            new FeederListScreen());
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.more_vert),
-                                      onPressed: () async {
-                                        pushReplacement(context,
-                                            new AddFeederScreen(feeder: item));
-                                      },
-                                    ),
-                                  ],
-                                ),),
+                              title: Text(item.petName + ' - ' + item.name),
+                              trailing: Wrap(
+                                spacing: 12,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () async {
+                                      await FireStoreUtils()
+                                          .getPetFromSchedule(item.id);
+                                      FireStoreUtils().removeSchedule(item);
+                                      pushReplacement(
+                                          context, new ScheduleList());
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.more_vert),
+                                    onPressed: () async {
+                                      Pet pet = await FireStoreUtils()
+                                          .getPetFromSchedule(item.id);
+                                      push(
+                                          context,
+                                          new AddScheduleScreen(
+                                              item, pet.name, pet.id));
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           );
                         },
                       )
@@ -101,8 +108,8 @@ class _FeederListScreenState extends State<FeederListScreen> {
               },
             ),
             floatingActionButton: FloatingActionButton(
-                heroTag: "addFeeder",
-                onPressed: addFeeder,
+                heroTag: "addSchedule",
+                onPressed: addSchedule,
                 child: new Icon(Icons.add)),
           ),
         ),

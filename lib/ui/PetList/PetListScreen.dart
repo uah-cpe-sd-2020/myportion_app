@@ -3,25 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:myportion_app/constants.dart';
 import 'package:myportion_app/main.dart';
 import 'package:myportion_app/model/Feeder.dart';
+import 'package:myportion_app/model/Pet.dart';
 import 'package:myportion_app/services/helper.dart';
-import 'package:myportion_app/ui/addFeeder/AddFeederScreen.dart';
 import 'package:myportion_app/services/FirestoreUtils.dart';
+import 'package:myportion_app/ui/addPet/AddPetProfileScreen.dart';
 import 'package:myportion_app/ui/home/HomeScreen.dart';
 
-class FeederListScreen extends StatefulWidget {
+class PetListScreen extends StatefulWidget {
   @override
-  State createState() => _FeederListScreenState();
+  State createState() => _PetListScreenState();
 }
 
-class _FeederListScreenState extends State<FeederListScreen> {
-  _FeederListScreenState();
+class _PetListScreenState extends State<PetListScreen> {
+  _PetListScreenState();
 
   GlobalKey<FormState> _key = new GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
-  List<Feeder> feeders = [];
 
-  addFeeder() async {
-    pushReplacement(context, new AddFeederScreen(feeder: new Feeder()));
+  addPet() async {
+    pushReplacement(context, new AddPetProfileScreen(new Pet()));
   }
 
   @override
@@ -29,7 +29,7 @@ class _FeederListScreenState extends State<FeederListScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(COLOR_PRIMARY),
-        title: Text('List Of Feeders'),
+        title: Text('List Of Pets'),
         leading: IconButton(
           icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () async {
@@ -60,7 +60,7 @@ class _FeederListScreenState extends State<FeederListScreen> {
           height: 670,
           child: Scaffold(
             body: FutureBuilder<List>(
-              future: FireStoreUtils().getFeederList(),
+              future: FireStoreUtils().getAllPets(),
               initialData: List(),
               builder: (context, snapshot) {
                 return snapshot.hasData
@@ -71,27 +71,30 @@ class _FeederListScreenState extends State<FeederListScreen> {
                           //get your item data here ...
                           return Card(
                             child: ListTile(
-                                title: Text(item.name + ' - ' + item.modelType),
-                                trailing: Wrap(
-                                  spacing: 8,
-                                  children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () async {
-                                        FireStoreUtils().removeFeeder(item);
-                                        pushReplacement(context,
-                                            new FeederListScreen());
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.more_vert),
-                                      onPressed: () async {
-                                        pushReplacement(context,
-                                            new AddFeederScreen(feeder: item));
-                                      },
-                                    ),
-                                  ],
-                                ),),
+                              title: Text(item.name + ' - ' + item.type),
+                              trailing: Wrap(
+                                spacing: 12,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () async {
+                                      FireStoreUtils().removePet(item);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.more_vert),
+                                    onPressed: () async {
+                                      Feeder feeder = await FireStoreUtils()
+                                          .getFeederFromPet(item.id);
+                                      pushReplacement(
+                                          context,
+                                          new AddPetProfileScreen(
+                                              item, feeder.name, feeder.id));
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           );
                         },
                       )
@@ -101,8 +104,8 @@ class _FeederListScreenState extends State<FeederListScreen> {
               },
             ),
             floatingActionButton: FloatingActionButton(
-                heroTag: "addFeeder",
-                onPressed: addFeeder,
+                heroTag: "addPet",
+                onPressed: addPet,
                 child: new Icon(Icons.add)),
           ),
         ),

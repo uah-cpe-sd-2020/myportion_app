@@ -63,6 +63,30 @@ class FireStoreUtils {
     }
   }
 
+  Future<Feeder> getFeederFromPet(String pid) async {
+    QuerySnapshot feederCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .get();
+    for (var doc in feederCollection.docs) {
+      QuerySnapshot petCollection = await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(doc.id)
+          .collection(PETS)
+          .get();
+      for (var pet in petCollection.docs) {
+        if (pet.data()["id"] == pid) {
+          FireStoreUtils.feederID = doc.data()["id"];
+          return Feeder.fromJson(doc.data());
+        }
+      }
+    }
+    return null;
+  }
+
   Future<List<dynamic>> getFeederList() async {
     List<Feeder> temp = [];
     QuerySnapshot feederCollection = await firestore
@@ -162,6 +186,79 @@ class FireStoreUtils {
     }
   }
 
+  Future<List<dynamic>> getPetList() async {
+    List<Pet> temp = [];
+    QuerySnapshot petCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .doc(FireStoreUtils.feederID)
+        .collection(PETS)
+        .get();
+    for (var doc in petCollection.docs) {
+      temp.add(new Pet.fromJson(doc.data()));
+    }
+    return temp;
+  }
+
+  Future<List<dynamic>> getAllPets() async {
+    List<Pet> temp = [];
+    QuerySnapshot feederCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .get();
+    for (var doc in feederCollection.docs) {
+      QuerySnapshot petCollection = await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(doc.id)
+          .collection(PETS)
+          .get();
+      for (var pet in petCollection.docs) {
+        temp.add(new Pet.fromJson(pet.data()));
+      }
+    }
+    return temp;
+  }
+
+  Future<Pet> getPetFromSchedule(String sid) async {
+    QuerySnapshot feederCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .get();
+    for (var doc in feederCollection.docs) {
+      QuerySnapshot petCollection = await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(doc.id)
+          .collection(PETS)
+          .get();
+      for (var pet in petCollection.docs) {
+        QuerySnapshot schedCollection = await firestore
+            .collection(USERS)
+            .doc(FireStoreUtils.userID)
+            .collection(FEEDERS)
+            .doc(doc.id)
+            .collection(PETS)
+            .doc(pet.id)
+            .collection(SCHEDULES)
+            .get();
+        for (var sched in schedCollection.docs) {
+          if (sched.data()["id"] == sid) {
+            FireStoreUtils.feederID = doc.data()["id"];
+            FireStoreUtils.petID = pet.data()["id"];
+            return Pet.fromJson(pet.data());
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   Future<Pet> addPet(Pet pet) async {
     Pet temp = await firestore
         .collection(USERS)
@@ -179,7 +276,7 @@ class FireStoreUtils {
   }
 
   Future<Pet> updatePet(Pet pet) async {
-    return await firestore
+    Pet temp = await firestore
         .collection(USERS)
         .doc(FireStoreUtils.userID)
         .collection(FEEDERS)
@@ -190,6 +287,25 @@ class FireStoreUtils {
         .then((document) {
       return pet;
     });
+    FireStoreUtils.petID = temp.id;
+    return temp;
+  }
+
+  Future<bool> removePet(Pet pet) async {
+    try {
+      await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(FireStoreUtils.feederID)
+          .collection(PETS)
+          .doc(pet.id)
+          .delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   /*SCHEDULE*/
@@ -211,6 +327,39 @@ class FireStoreUtils {
     }
   }
 
+  Future<List<dynamic>> getAllSchedules() async {
+    List<Schedule> temp = [];
+    QuerySnapshot feederCollection = await firestore
+        .collection(USERS)
+        .doc(FireStoreUtils.userID)
+        .collection(FEEDERS)
+        .get();
+    for (var doc in feederCollection.docs) {
+      QuerySnapshot petCollection = await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(doc.id)
+          .collection(PETS)
+          .get();
+      for (var pet in petCollection.docs) {
+        QuerySnapshot scheduleCollection = await firestore
+            .collection(USERS)
+            .doc(FireStoreUtils.userID)
+            .collection(FEEDERS)
+            .doc(doc.id)
+            .collection(PETS)
+            .doc(pet.id)
+            .collection(SCHEDULES)
+            .get();
+        for (var schedule in scheduleCollection.docs) {
+          temp.add(new Schedule.fromJson(schedule.data()));
+        }
+      }
+    }
+    return temp;
+  }
+
   Future<Schedule> addSchedule(Schedule schedule) async {
     return await firestore
         .collection(USERS)
@@ -222,11 +371,12 @@ class FireStoreUtils {
         .collection(SCHEDULES)
         .add(schedule.toJson())
         .then((document) {
+      schedule.id = document.id;
       return schedule;
     });
   }
 
-  Future<Schedule> updateSchedule(Schedule schedule) async {
+  Future<Schedule> updateSchedule(schedule) async {
     return await firestore
         .collection(USERS)
         .doc(FireStoreUtils.userID)
@@ -240,5 +390,24 @@ class FireStoreUtils {
         .then((document) {
       return schedule;
     });
+  }
+
+  Future<bool> removeSchedule(Schedule schedule) async {
+    try {
+      await firestore
+          .collection(USERS)
+          .doc(FireStoreUtils.userID)
+          .collection(FEEDERS)
+          .doc(FireStoreUtils.feederID)
+          .collection(PETS)
+          .doc(FireStoreUtils.petID)
+          .collection(SCHEDULES)
+          .doc(schedule.id)
+          .delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Pet {
   String rfid = '';
-  Timestamp dob = Timestamp.now();
+  String dob = '';
   String id;
   String name = '';
   String type = '';
-  num lbs = 0;
+  num lbs = -1;
   String petProfilePictureURL = '';
 
   Pet(
@@ -27,7 +25,7 @@ class Pet {
         id: parsedJson['id'] ?? '',
         name: parsedJson['name'] ?? '',
         type: parsedJson['type'] ?? '',
-        lbs: parsedJson['lbs'] ?? 0,
+        lbs: parsedJson['lbs'] ?? -1,
         petProfilePictureURL: parsedJson['petProfilePictureURL'] ?? '');
   }
 

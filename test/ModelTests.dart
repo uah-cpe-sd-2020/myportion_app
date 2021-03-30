@@ -134,14 +134,17 @@ void main() {
     test('Pet Constructs Properly', () {
       Pet pet = new Pet(
           rfid: "ABC123",
-          dob: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
+          dob: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString(),
           id: "pet",
           name: "Spot",
           type: "Dog",
           lbs: 29);
       expect(pet.rfid, "ABC123");
-      expect(pet.dob,
-          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)));
+      expect(
+          pet.dob,
+          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString());
       expect(pet.id, "pet");
       expect(pet.name, "Spot");
       expect(pet.type, "Dog");
@@ -151,15 +154,18 @@ void main() {
     test('Pet fromJson', () {
       Pet pet = Pet.fromJson({
         'rfid': "ABC123",
-        'dob': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
+        'dob': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+            .toString(),
         'id': "pet",
         'name': "Spot",
         'type': "Dog",
         'lbs': 29,
       });
       expect(pet.rfid, "ABC123");
-      expect(pet.dob,
-          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)));
+      expect(
+          pet.dob,
+          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString());
       expect(pet.id, "pet");
       expect(pet.name, "Spot");
       expect(pet.type, "Dog");
@@ -169,7 +175,8 @@ void main() {
     test('Pet toJson', () {
       Pet pet = new Pet(
           rfid: "ABC123",
-          dob: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
+          dob: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString(),
           id: "pet",
           name: "Spot",
           type: "Dog",
@@ -177,7 +184,8 @@ void main() {
           petProfilePictureURL: null);
       expect(pet.toJson(), {
         'rfid': "ABC123",
-        'dob': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
+        'dob': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+            .toString(),
         'id': "pet",
         'name': "Spot",
         'type': "Dog",
@@ -189,69 +197,46 @@ void main() {
 
   group('Schedule Class and Services', () {
     test('Schedule Constructs Properly', () {
-      Schedule sched = new Schedule(id: "sched", portion: [
-        1,
-        2,
-        3,
-        4,
-        5
-      ], time: [
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 05)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 06)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 07)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08))
-      ]);
+      Schedule sched = new Schedule(
+          id: "sched",
+          portion: 2,
+          time: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString());
       expect(sched.id, "sched");
-      expect(sched.portion, [1, 2, 3, 4, 5]);
-      expect(sched.time, [
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 05)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 06)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 07)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08))
-      ]);
+      expect(sched.portion, 2);
+      expect(
+          sched.time,
+          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString());
     });
 
     test('Schedule fromJson', () {
       Schedule sched = Schedule.fromJson({
         'id': "sched",
-        'portion': [1, 2, 3, 4, 5],
-        'time': [
-          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
-          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 05)),
-          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 06)),
-          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 07)),
-          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08))
-        ]
+        'portion': 1,
+        'time': Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+            .toString()
       });
       expect(sched.id, "sched");
-      expect(sched.portion, [1, 2, 3, 4, 5]);
-      expect(sched.time, [
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 05)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 06)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 07)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08))
-      ]);
+      expect(sched.portion, 1);
+      expect(
+          sched.time,
+          Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString());
     });
 
     test('Schedule toJson', () {
-      Schedule sched = new Schedule(id: "sched", portion: [
-        1,
-        2,
-        3,
-        4,
-        5
-      ], time: [
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 05)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 06)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 07)),
-        Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 08))
-      ]);
+      Schedule sched = new Schedule(
+          id: "sched",
+          name: "kitchen",
+          petName: "spot",
+          portion: 4,
+          time: Timestamp.fromDate(new DateTime.utc(1969, 7, 20, 20, 18, 04))
+              .toString());
       expect(sched.toJson(), {
         'id': "sched",
+        'name': "kitchen",
+        'petName': "spot",
         'portion': sched.portion,
         'time': sched.time,
       });
