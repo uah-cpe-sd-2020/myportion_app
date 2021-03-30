@@ -68,14 +68,21 @@
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/addFeeder.html">addFeeder</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/addPet.html">addPet</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/addSchedule.html">addSchedule</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getAllPets.html">getAllPets</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getAllSchedules.html">getAllSchedules</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getCurrentUser.html">getCurrentUser</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getFeeder.html">getFeeder</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getFeederFromPet.html">getFeederFromPet</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getFeederList.html">getFeederList</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getNotification.html">getNotification</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getPet.html">getPet</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getPetFromSchedule.html">getPetFromSchedule</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getPetList.html">getPetList</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getSchedule.html">getSchedule</a></li>
         <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/removeFeeder.html">removeFeeder</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/removePet.html">removePet</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/removeSchedule.html">removeSchedule</a></li>
         <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/updateFeeder.html">updateFeeder</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/updateNotification.html">updateNotification</a></li>
@@ -114,7 +121,7 @@
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">Future&lt;Pet&gt; updatePet(Pet pet) async {
-  return await firestore
+  Pet temp = await firestore
       .collection(USERS)
       .doc(FireStoreUtils.userID)
       .collection(FEEDERS)
@@ -125,6 +132,8 @@
       .then((document) {
     return pet;
   });
+  FireStoreUtils.petID = temp.id;
+  return temp;
 }</code></pre>
     </section>
 

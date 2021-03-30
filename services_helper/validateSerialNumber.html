@@ -61,6 +61,7 @@
       <li class="section-title"><a href="../services_helper/services_helper-library.html#functions">Functions</a></li>
       <li><a href="../services_helper/displayCircleImage.html">displayCircleImage</a></li>
       <li><a href="../services_helper/hideProgress.html">hideProgress</a></li>
+      <li><a href="../services_helper/pop.html">pop</a></li>
       <li><a href="../services_helper/push.html">push</a></li>
       <li><a href="../services_helper/pushAndRemoveUntil.html">pushAndRemoveUntil</a></li>
       <li><a href="../services_helper/pushReplacement.html">pushReplacement</a></li>
@@ -94,10 +95,9 @@
       <pre class="language-dart"><code class="language-dart">String validateSerialNumber(String value) {
   String pattern = r&#39;^[a-zA-Z0-9]+$&#39;;
   RegExp regExp = new RegExp(pattern);
-  if (value.length == 0)
-  {
-      return &quot;Model Number is required&quot;;
-  } else if (!regExp.hasMatch(value)){
+  if (value.length == 0) {
+    return &quot;Model Number is required&quot;;
+  } else if (!regExp.hasMatch(value)) {
     return &quot;Model Number must contain only digits and letters&quot;;
   }
   return null;

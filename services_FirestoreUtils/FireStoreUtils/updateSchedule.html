@@ -68,14 +68,21 @@
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/addFeeder.html">addFeeder</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/addPet.html">addPet</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/addSchedule.html">addSchedule</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getAllPets.html">getAllPets</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getAllSchedules.html">getAllSchedules</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getCurrentUser.html">getCurrentUser</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getFeeder.html">getFeeder</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getFeederFromPet.html">getFeederFromPet</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getFeederList.html">getFeederList</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getNotification.html">getNotification</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getPet.html">getPet</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getPetFromSchedule.html">getPetFromSchedule</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/getPetList.html">getPetList</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/getSchedule.html">getSchedule</a></li>
         <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/removeFeeder.html">removeFeeder</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/removePet.html">removePet</a></li>
+        <li><a href="../../services_FirestoreUtils/FireStoreUtils/removeSchedule.html">removeSchedule</a></li>
         <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/updateFeeder.html">updateFeeder</a></li>
         <li><a href="../../services_FirestoreUtils/FireStoreUtils/updateNotification.html">updateNotification</a></li>
@@ -106,14 +113,14 @@
     <section class="multi-line-signature">
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../model_Schedule/Schedule-class.html">Schedule</a></span>&gt;</span></span>
             <span class="name ">updateSchedule</span>
-(<wbr><ol class="parameter-list"><li><span class="parameter" id="updateSchedule-param-schedule"><span class="type-annotation"><a href="../../model_Schedule/Schedule-class.html">Schedule</a></span> <span class="parameter-name">schedule</span></span></li>
+(<wbr><ol class="parameter-list"><li><span class="parameter" id="updateSchedule-param-schedule"><span class="type-annotation">dynamic</span> <span class="parameter-name">schedule</span></span></li>
 </ol>)
       
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;Schedule&gt; updateSchedule(Schedule schedule) async {
+      <pre class="language-dart"><code class="language-dart">Future&lt;Schedule&gt; updateSchedule(schedule) async {
   return await firestore
       .collection(USERS)
       .doc(FireStoreUtils.userID)

@@ -63,6 +63,8 @@
       </li>
       <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
       <li><a href="../../model_Schedule/Schedule/id.html">id</a></li>
+      <li><a href="../../model_Schedule/Schedule/name.html">name</a></li>
+      <li><a href="../../model_Schedule/Schedule/petName.html">petName</a></li>
       <li><a href="../../model_Schedule/Schedule/portion.html">portion</a></li>
       <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
       <li><a href="../../model_Schedule/Schedule/time.html">time</a></li>
@@ -96,7 +98,9 @@
       <pre class="language-dart"><code class="language-dart">factory Schedule.fromJson(Map&lt;String, dynamic&gt; parsedJson) {
   return new Schedule(
       id: parsedJson[&#39;id&#39;] ?? &#39;&#39;,
-      portion: parsedJson[&#39;portion&#39;] ?? &#39;&#39;,
+      name: parsedJson[&#39;name&#39;] ?? &#39;&#39;,
+      petName: parsedJson[&#39;petName&#39;] ?? &#39;&#39;,
+      portion: parsedJson[&#39;portion&#39;] ?? 0,
       time: parsedJson[&#39;time&#39;] ?? &#39;&#39;);
 }</code></pre>
     </section>
