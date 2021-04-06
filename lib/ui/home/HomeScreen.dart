@@ -40,9 +40,17 @@ class _HomeState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text(
-                'Drawer Header',
-                style: TextStyle(color: Colors.white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  displayCircleImage(user.profilePictureURL, 80, false),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(user.firstName),
+                  ),
+                ]
               ),
               decoration: BoxDecoration(
                 color: Color(COLOR_PRIMARY),
