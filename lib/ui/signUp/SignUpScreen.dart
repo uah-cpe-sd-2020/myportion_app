@@ -373,6 +373,7 @@ class _SignUpState extends State<SignUpScreen> {
             .doc(result.user.uid)
             .set(user.toJson());
         hideProgress();
+        FireStoreUtils.userID = user.id;
         MyAppState.currentUser = user;
         pushAndRemoveUntil(context, HomeScreen(user: user), false);
       } on auth.FirebaseAuthException catch (error) {
